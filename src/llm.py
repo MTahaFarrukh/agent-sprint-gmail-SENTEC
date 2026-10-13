@@ -5,12 +5,14 @@ from __future__ import annotations
 import json
 import re
 import time
+import traceback
 from typing import Any
 
 import requests
 
 from src.config import (
     ANTHROPIC_API_KEY,
+    DEFAULT_GEMINI_MODEL,
     GEMINI_API_KEY,
     LLM_MODEL,
     LLM_PROVIDER,
@@ -22,16 +24,27 @@ MAX_RETRIES: int = 3
 FENCE_RE = re.compile(r"^```(?:json)?\s*|\s*```$", re.IGNORECASE | re.MULTILINE)
 
 
+def _log_failure(stage: str, exc: BaseException, *, raw: str | None = None) -> None:
+    """Print full exception type + message (and raw text when parsing fails)."""
+    print(
+        f"[llm:{stage}] {type(exc).__name__}: {exc}",
+        flush=True,
+    )
+    if raw is not None:
+        print(f"[llm:{stage}] raw response:\n{raw}", flush=True)
+    print(f"[llm:{stage}] traceback:\n{traceback.format_exc()}", flush=True)
+
+
 def _default_model(provider: str) -> str:
     """Pick a sensible default model when LLM_MODEL is unset."""
     if LLM_MODEL:
         return LLM_MODEL
     defaults = {
-        "gemini": "gemini-2.0-flash",
+        "gemini": DEFAULT_GEMINI_MODEL,
         "anthropic": "claude-3-5-haiku-latest",
         "openai": "gpt-4o-mini",
     }
-    return defaults.get(provider, "gemini-2.0-flash")
+    return defaults.get(provider, DEFAULT_GEMINI_MODEL)
 
 
 def _strip_fences(text: str) -> str:
@@ -45,16 +58,30 @@ def _strip_fences(text: str) -> str:
 def _parse_json_text(text: str) -> dict[str, Any]:
     """Parse model output as a JSON object after stripping fences."""
     cleaned = _strip_fences(text)
-    data = json.loads(cleaned)
+    try:
+        data = json.loads(cleaned)
+    except json.JSONDecodeError as exc:
+        _log_failure("json_parse", exc, raw=text)
+        raise
     if not isinstance(data, dict):
-        raise ValueError("LLM response JSON must be an object")
+        err = ValueError("LLM response JSON must be an object")
+        _log_failure("json_parse", err, raw=text)
+        raise err
     return data
+
+
+def _http_error_detail(response: requests.Response) -> str:
+    """Include status and body snippet for failed HTTP calls."""
+    body = (response.text or "")[:2000]
+    return f"HTTP {response.status_code}: {body}"
 
 
 def _call_gemini(system_prompt: str, user_prompt: str) -> str:
     """Call Google Gemini generateContent API."""
     if not GEMINI_API_KEY:
-        raise RuntimeError("GEMINI_API_KEY is not set")
+        raise RuntimeError(
+            "GEMINI_API_KEY is not set (check project-root .env via python-dotenv)"
+        )
 
     model = _default_model("gemini")
     url = (
@@ -75,7 +102,10 @@ def _call_gemini(system_prompt: str, user_prompt: str) -> str:
         json=payload,
         timeout=LLM_TIMEOUT_SECONDS,
     )
-    response.raise_for_status()
+    if not response.ok:
+        raise RuntimeError(
+            f"Gemini call failed for model={model!r}: {_http_error_detail(response)}"
+        )
     body = response.json()
     try:
         return body["candidates"][0]["content"]["parts"][0]["text"]
@@ -105,7 +135,10 @@ def _call_anthropic(system_prompt: str, user_prompt: str) -> str:
         },
         timeout=LLM_TIMEOUT_SECONDS,
     )
-    response.raise_for_status()
+    if not response.ok:
+        raise RuntimeError(
+            f"Anthropic call failed for model={model!r}: {_http_error_detail(response)}"
+        )
     body = response.json()
     try:
         return body["content"][0]["text"]
@@ -136,7 +169,10 @@ def _call_openai(system_prompt: str, user_prompt: str) -> str:
         },
         timeout=LLM_TIMEOUT_SECONDS,
     )
-    response.raise_for_status()
+    if not response.ok:
+        raise RuntimeError(
+            f"OpenAI call failed for model={model!r}: {_http_error_detail(response)}"
+        )
     body = response.json()
     try:
         return body["choices"][0]["message"]["content"]
@@ -171,6 +207,7 @@ def generate_json(system_prompt: str, user_prompt: str) -> dict[str, Any]:
             return _parse_json_text(raw)
         except Exception as exc:  # noqa: BLE001 — retry then raise
             last_error = exc
+            _log_failure(f"attempt_{attempt + 1}/{MAX_RETRIES}", exc)
             if attempt < MAX_RETRIES - 1:
                 time.sleep(2**attempt)
 

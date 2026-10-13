@@ -2,11 +2,21 @@
 
 from __future__ import annotations
 
+import traceback
 from dataclasses import asdict, dataclass
 from typing import Any, Mapping
 
 from src.config import MAX_BODY_CHARS
 from src.llm import generate_json
+
+
+def _log_classify_failure(stage: str, exc: BaseException) -> None:
+    """Print full exception type + message instead of swallowing errors."""
+    print(
+        f"[classifier:{stage}] {type(exc).__name__}: {exc}",
+        flush=True,
+    )
+    print(f"[classifier:{stage}] traceback:\n{traceback.format_exc()}", flush=True)
 
 CATEGORIES = frozenset(
     {
@@ -172,11 +182,16 @@ def classify(email: Any) -> Classification:
     user_prompt = _build_user_prompt(sender, subject, body)
 
     last_error = "unknown classification error"
-    for _ in range(2):
+    for attempt in range(2):
         try:
             raw = generate_json(SYSTEM_PROMPT, user_prompt)
             return validate_classification(raw)
         except Exception as exc:  # noqa: BLE001 — intentional fallback path
-            last_error = str(exc)
+            last_error = f"{type(exc).__name__}: {exc}"
+            _log_classify_failure(f"attempt_{attempt + 1}/2", exc)
 
+    print(
+        f"[classifier:fallback] giving up after retries: {last_error}",
+        flush=True,
+    )
     return _fallback(f"classification failure: {last_error}")

@@ -1,0 +1,176 @@
+{
+  "company_name": "ShopEase",
+  "signature": "Warm regards,\nShopEase Customer Care",
+  "tone": "polite, empathetic, concise",
+  "categories": {
+    "refund": {
+      "rules": [
+        "Refunds are available within 14 days of delivery for unused items in original packaging.",
+        "Refunds are issued to the original payment method within 5–7 business days after approval.",
+        "Damaged-on-arrival items qualify for a full refund or replacement at the customer's choice.",
+        "Digital goods and gift cards are non-refundable once delivered."
+      ],
+      "allowed_promises": [
+        "review the refund request within 2 business days",
+        "process an eligible refund to the original payment method within 5–7 business days",
+        "provide a prepaid return label for eligible returns",
+        "confirm when the refund has been approved"
+      ],
+      "forbidden": [
+        "instant cash refund",
+        "cash compensation or voucher beyond policy",
+        "guarantee a refund before eligibility is verified",
+        "refund amounts above the original purchase price",
+        "wire transfer or cryptocurrency payouts"
+      ],
+      "sla": "Acknowledge within 24 hours; refund decision within 2 business days."
+    },
+    "delivery": {
+      "rules": [
+        "Standard delivery is 3–5 business days; express is 1–2 business days where available.",
+        "Customers must be given the latest tracking status when a shipment is delayed.",
+        "Lost packages after the carrier's investigation window may be replaced or refunded.",
+        "Address changes are only possible before the package ships."
+      ],
+      "allowed_promises": [
+        "share the latest tracking update",
+        "open a carrier investigation for delayed or missing packages",
+        "reship or refund if the package is confirmed lost",
+        "update the delivery estimate within 1 business day"
+      ],
+      "forbidden": [
+        "guarantee a same-day delivery date",
+        "promise courier contact numbers or personal driver details",
+        "offer free expedited shipping as compensation without approval",
+        "invent tracking numbers or delivery dates"
+      ],
+      "sla": "Tracking update within 1 business day; investigation opened within 2 business days for missing parcels."
+    },
+    "billing": {
+      "rules": [
+        "Duplicate charges are reversed after verification against the payment processor.",
+        "Subscription cancellations stop future renewals; the current billing period is not prorated unless stated.",
+        "Invoice copies can be resent to the account email on request."
+      ],
+      "allowed_promises": [
+        "investigate the charge within 2 business days",
+        "reverse a verified duplicate charge",
+        "resend the invoice or receipt",
+        "confirm subscription cancellation for future renewals"
+      ],
+      "forbidden": [
+        "waive all future subscription fees indefinitely",
+        "promise chargeback outcomes with the bank",
+        "issue store credit larger than the disputed amount",
+        "share full card numbers or CVV"
+      ],
+      "sla": "Billing investigation acknowledgment within 24 hours; resolution within 3 business days."
+    },
+    "product_defect": {
+      "rules": [
+        "Manufacturing defects within the warranty period qualify for repair, replacement, or refund.",
+        "Customers should provide order ID and a brief description or photo of the defect when available.",
+        "Misuse, accidental damage, and wear-and-tear are not covered."
+      ],
+      "allowed_promises": [
+        "start a warranty review within 2 business days",
+        "arrange a replacement for a confirmed manufacturing defect",
+        "offer a refund if a covered defective item cannot be replaced",
+        "share return instructions for defective products"
+      ],
+      "forbidden": [
+        "admit legal liability or product recalls without authorization",
+        "promise medical or safety outcomes",
+        "offer lifetime free replacements",
+        "guarantee a specific repair turnaround of under 24 hours"
+      ],
+      "sla": "Defect claim acknowledgment within 24 hours; warranty decision within 3 business days."
+    },
+    "service_quality": {
+      "rules": [
+        "Complaints about support interactions are logged and reviewed by a team lead.",
+        "Customers receive an apology and a clear next step without blaming the customer.",
+        "Callback requests are scheduled during business hours."
+      ],
+      "allowed_promises": [
+        "escalate the experience feedback to a team lead",
+        "continue helping with the original issue",
+        "schedule a callback during business hours",
+        "document the complaint in the customer record"
+      ],
+      "forbidden": [
+        "discipline or fire a named employee",
+        "offer gift cards or cash for poor service without approval",
+        "promise a specific agent by name for all future contacts"
+      ],
+      "sla": "Service complaint acknowledgment within 24 hours; lead review within 2 business days."
+    },
+    "account_access": {
+      "rules": [
+        "Identity must be verified before account recovery steps are shared.",
+        "Suspicious logins can be temporarily frozen pending review.",
+        "Password reset links are sent only to the registered email address."
+      ],
+      "allowed_promises": [
+        "send a password reset link to the registered email",
+        "temporarily freeze the account while investigating suspicious activity",
+        "guide the customer through identity verification",
+        "confirm when access has been restored"
+      ],
+      "forbidden": [
+        "ask for or accept passwords over email",
+        "bypass identity verification",
+        "share another customer's account details",
+        "promise that fraud losses will always be reimbursed"
+      ],
+      "sla": "Access issues acknowledged within 12 hours; unlock or clear next steps within 1 business day after verification."
+    },
+    "general_inquiry": {
+      "rules": [
+        "Answer only with information supported by this policy file.",
+        "If the question is outside policy, say a specialist will follow up.",
+        "Do not invent shipping regions, prices, or product specs."
+      ],
+      "allowed_promises": [
+        "answer using published ShopEase policy information",
+        "point the customer to the relevant help article topic",
+        "have a specialist follow up within 2 business days if more detail is needed"
+      ],
+      "forbidden": [
+        "invent prices, stock levels, or shipping coverage",
+        "share internal contact lists or executive emails",
+        "make commitments for other departments without policy support"
+      ],
+      "sla": "General inquiries answered within 1 business day."
+    }
+  },
+  "escalation_keywords": [
+    "lawsuit",
+    "lawyer",
+    "attorney",
+    "court",
+    "consumer court",
+    "legal notice",
+    "sue",
+    "fraud",
+    "data breach",
+    "data-breach",
+    "identity theft",
+    "unsafe",
+    "injury",
+    "poison",
+    "regulator",
+    "FDA",
+    "FTC",
+    "ombudsman",
+    "journalist",
+    "news media",
+    "social media",
+    "twitter",
+    "facebook",
+    "instagram",
+    "tiktok",
+    "go viral"
+  ],
+  "refund_escalation_threshold": 200
+}
