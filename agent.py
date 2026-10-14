@@ -56,7 +56,11 @@ def _load_gemini_api_key() -> str:
 # Must run before importing llm / src.config so the key is visible.
 GEMINI_API_KEY = _load_gemini_api_key()
 
-from llm import repair_draft, triage_email  # noqa: E402
+from llm import (  # noqa: E402
+    arm_demo_corrupt_json_once,
+    repair_draft,
+    triage_email,
+)
 from policy import load_policy  # noqa: E402
 from validator import inspect_draft, lookup_policy, validate_result  # noqa: E402
 
@@ -67,6 +71,40 @@ HOLDING_REPLY = (
     "university office directly.\n\n"
     "Student Helpdesk"
 )
+
+# Intentionally bad draft for --demo-failures (over 150 words, wrong sign-off,
+# invented office). validate_draft + repair_draft must fix it.
+_DEMO_BAD_DRAFT = (
+    "Dear Student,\n\n"
+    "We have forwarded your request to the Quantum Affairs Office which is not "
+    "a real office in the helpdesk policy. "
+    + ("This filler sentence pads the reply past one hundred fifty words. " * 20)
+    + "\n\nBest regards,\nCampus Bot Team\n"
+)
+
+
+class DemoStats:
+    """Counters for --demo-failures recovery summary."""
+
+    def __init__(self) -> None:
+        self.injected = 0
+        self.recovered = 0
+        self.safe_fallback = 0
+        self.injected_timeout = 0
+        self.recovered_timeout = 0
+        self.injected_json = 0
+        self.recovered_json = 0
+        self.injected_draft = 0
+        self.recovered_draft = 0
+
+    def summary_detail(self) -> str:
+        return (
+            f"injected={self.injected} recovered={self.recovered} "
+            f"safe_fallback={self.safe_fallback} "
+            f"(timeout {self.recovered_timeout}/{self.injected_timeout}, "
+            f"bad_json {self.recovered_json}/{self.injected_json}, "
+            f"bad_draft {self.recovered_draft}/{self.injected_draft})"
+        )
 
 
 class TraceLogger:
@@ -219,34 +257,94 @@ def process_email(
     policy_codes: dict[str, str],
     logger: logging.Logger,
     trace: TraceLogger,
+    *,
+    demo_failures: bool = False,
+    email_index: int = 1,
+    demo_stats: DemoStats | None = None,
 ) -> dict[str, Any]:
     """Explicit agent loop: PLAN → ACTION/OBSERVATION → DECISION."""
     email_id = str(email.get("id") or "UNKNOWN")
     subject = str(email.get("subject") or "")[:50]
+    stats = demo_stats
 
     if email.get("_load_error"):
         trace.step(email_id, "PLAN", f"load failed; emit safe record ({email['_load_error']})")
         trace.step(email_id, "DECISION", "safe failure escalate=true")
         logger.info("%s final=safe_failure reason=%s", email_id, email["_load_error"])
+        if stats is not None:
+            stats.safe_fallback += 1
         return _safe_failure(email_id, str(email["_load_error"]))
+
+    inject_timeout = bool(demo_failures)
+    inject_bad_json = bool(demo_failures) and email_index % 3 == 0
+    inject_bad_draft = bool(demo_failures) and email_index % 5 == 0
+    timeout_recovered = False
+    json_recovered = False
+    draft_recovered = False
 
     try:
         # --- PLAN ---
+        plan_extra = ""
+        if demo_failures:
+            plan_extra = " | DEMO failures armed"
         trace.step(
             email_id,
             "PLAN",
             f"triage -> lookup cited codes -> validate escalation -> "
-            f"validate/repair draft -> decide | subject={subject!r}",
+            f"validate/repair draft -> decide | subject={subject!r}{plan_extra}",
         )
 
-        # --- ACTION triage ---
+        # --- ACTION triage (optional demo timeout + bad JSON) ---
         trace.step(email_id, "ACTION triage", "LLM classify + draft")
-        raw = _with_retry(
-            email_id,
-            "triage",
-            lambda: triage_email(email, policy_text, policy_codes),
-            trace,
-        )
+        triage_calls = 0
+
+        if inject_timeout and stats is not None:
+            stats.injected += 1
+            stats.injected_timeout += 1
+        if inject_bad_json:
+            arm_demo_corrupt_json_once()
+            if stats is not None:
+                stats.injected += 1
+                stats.injected_json += 1
+            logger.info(
+                "%s DEMO: simulated failure — first LLM JSON will be corrupted",
+                email_id,
+            )
+            trace.step(
+                email_id,
+                "OBSERVATION",
+                "DEMO: simulated failure — first LLM JSON answer will be invalid",
+            )
+
+        def _triage_with_demo() -> dict[str, Any]:
+            nonlocal triage_calls, timeout_recovered, json_recovered
+            triage_calls += 1
+            if inject_timeout and triage_calls == 1:
+                msg = "DEMO: simulated failure HTTP 503 timeout"
+                logger.info("%s %s", email_id, msg)
+                trace.step(email_id, "OBSERVATION", msg)
+                raise TimeoutError(msg)
+            result = triage_email(email, policy_text, policy_codes)
+            if inject_timeout and triage_calls > 1:
+                timeout_recovered = True
+            if inject_bad_json:
+                # generate_json already retried past the corrupted answer.
+                json_recovered = True
+            return result
+
+        raw = _with_retry(email_id, "triage", _triage_with_demo, trace)
+        if inject_timeout and timeout_recovered and stats is not None:
+            stats.recovered += 1
+            stats.recovered_timeout += 1
+            logger.info("%s DEMO: simulated failure — timeout recovered via retry", email_id)
+        if inject_bad_json and json_recovered and stats is not None:
+            stats.recovered += 1
+            stats.recovered_json += 1
+            logger.info(
+                "%s DEMO: simulated failure — invalid JSON recovered via LLM retry",
+                email_id,
+            )
+
         cited = [
             str(r).strip().upper()
             for r in (raw.get("policy_refs") or [])
@@ -301,6 +399,23 @@ def process_email(
         else:
             logger.info("%s validator_fixes=none", email_id)
 
+        # Demo: replace first draft with a deliberately bad one.
+        if inject_bad_draft:
+            if stats is not None:
+                stats.injected += 1
+                stats.injected_draft += 1
+            result["reply_draft"] = _DEMO_BAD_DRAFT
+            logger.info(
+                "%s DEMO: simulated failure — replaced draft with bad draft",
+                email_id,
+            )
+            trace.step(
+                email_id,
+                "OBSERVATION",
+                "DEMO: simulated failure — bad draft injected "
+                "(>150 words, wrong sign-off, invented office)",
+            )
+
         # --- ACTION validate_draft + repair loop ---
         repairs = 0
         while True:
@@ -310,6 +425,8 @@ def process_email(
             issues = inspect_draft(draft, policy_refs=refs_now)
             if not issues:
                 trace.step(email_id, "OBSERVATION", "issues=[]")
+                if inject_bad_draft and repairs > 0:
+                    draft_recovered = True
                 break
             trace.step(email_id, "OBSERVATION", f"issues={issues}")
             if repairs >= MAX_REPAIRS:
@@ -353,6 +470,28 @@ def process_email(
                 )
                 break
 
+        if inject_bad_draft and draft_recovered and stats is not None:
+            stats.recovered += 1
+            stats.recovered_draft += 1
+            logger.info(
+                "%s DEMO: simulated failure — bad draft recovered via repair_draft",
+                email_id,
+            )
+        elif inject_bad_draft and not draft_recovered:
+            # Final check: maybe last repair cleared issues without loop break on empty.
+            final_issues = inspect_draft(
+                str(result.get("reply_draft") or ""),
+                policy_refs=list(result.get("policy_refs") or []),
+            )
+            if not final_issues and stats is not None:
+                stats.recovered += 1
+                stats.recovered_draft += 1
+                draft_recovered = True
+                logger.info(
+                    "%s DEMO: simulated failure — bad draft recovered via repair_draft",
+                    email_id,
+                )
+
         notes = str(result.get("agent_notes") or "").strip()
         if not notes:
             result["agent_notes"] = (
@@ -389,6 +528,8 @@ def process_email(
             "agent_notes": str(result.get("agent_notes") or ""),
         }
     except Exception as exc:  # noqa: BLE001 — never crash the loop
+        if stats is not None:
+            stats.safe_fallback += 1
         trace.step(
             email_id,
             "ACTION retry",
@@ -461,6 +602,15 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         default=ROOT / "logs" / "agent.log",
         help="Log file path",
     )
+    parser.add_argument(
+        "--demo-failures",
+        action="store_true",
+        default=False,
+        help=(
+            "Demo only (off by default): inject timeout/503, invalid JSON, and "
+            "bad drafts so retry/repair paths can be shown live"
+        ),
+    )
     return parser.parse_args(argv)
 
 
@@ -508,18 +658,40 @@ def main(argv: list[str] | None = None) -> int:
     if args.limit and args.limit > 0:
         files = files[: args.limit]
     logger.info("inbox_scan files=%d", len(files))
+    demo_failures = bool(getattr(args, "demo_failures", False))
+    demo_stats = DemoStats() if demo_failures else None
+    if demo_failures:
+        logger.info("DEMO: simulated failure mode ON (--demo-failures)")
+        print("DEMO: simulated failure mode ON", flush=True)
+        trace.step(
+            "RUN",
+            "PLAN",
+            "DEMO: simulated failure mode — timeout each email; "
+            "bad JSON every 3rd; bad draft every 5th",
+        )
 
     results: list[dict[str, Any]] = []
-    for path in files:
+    for index, path in enumerate(files, start=1):
         email = _load_email_file(path, logger)
         if email is None:
             eid = path.stem
             trace.step(eid, "PLAN", "could not read file; emit safe record")
             trace.step(eid, "DECISION", "safe failure escalate=true")
+            if demo_stats is not None:
+                demo_stats.safe_fallback += 1
             results.append(_safe_failure(eid, "could not read file"))
             continue
         results.append(
-            process_email(email, policy_text, policy_codes, logger, trace)
+            process_email(
+                email,
+                policy_text,
+                policy_codes,
+                logger,
+                trace,
+                demo_failures=demo_failures,
+                email_index=index,
+                demo_stats=demo_stats,
+            )
         )
 
     out_path = Path(args.out).resolve()
@@ -527,6 +699,13 @@ def main(argv: list[str] | None = None) -> int:
     logger.info("outbox_written path=%s count=%d", out_path, len(results))
 
     _print_summary(results)
+
+    if demo_stats is not None:
+        detail = demo_stats.summary_detail()
+        print(f"\nDEMO recovery summary: {detail}", flush=True)
+        logger.info("DEMO recovery summary: %s", detail)
+        trace.step("RUN", "DECISION", f"DEMO recovery summary: {detail}")
+
     return 0
 
 

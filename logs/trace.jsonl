@@ -1,41 +1,76 @@
-{"email_id": "E005", "step": "PLAN", "detail": "triage -> lookup cited codes -> validate escalation -> validate/repair draft -> decide | subject='URGENT: sparking wire in Block A corridor'", "timestamp": "2026-10-14T06:04:38.858570+00:00"}
-{"email_id": "E005", "step": "ACTION triage", "detail": "LLM classify + draft", "timestamp": "2026-10-14T06:04:38.859410+00:00"}
-{"email_id": "E005", "step": "OBSERVATION", "detail": "category=hostel escalate=True cited=['HOSTEL-3', 'ESC-1']", "timestamp": "2026-10-14T06:04:41.816943+00:00"}
-{"email_id": "E005", "step": "ACTION lookup_policy", "detail": "HOSTEL-3", "timestamp": "2026-10-14T06:04:41.818375+00:00"}
-{"email_id": "E005", "step": "OBSERVATION", "detail": "HOSTEL-3: Any electrical, fire or structural hazard is an emergency. Escalate immediately ", "timestamp": "2026-10-14T06:04:41.819739+00:00"}
-{"email_id": "E005", "step": "ACTION lookup_policy", "detail": "ESC-1", "timestamp": "2026-10-14T06:04:41.820587+00:00"}
-{"email_id": "E005", "step": "OBSERVATION", "detail": "ESC-1: Safety hazards (fire, electrical, structural): escalate immediately to the Hoste", "timestamp": "2026-10-14T06:04:41.822025+00:00"}
-{"email_id": "E005", "step": "OBSERVATION", "detail": "validator confirmed ESC-1", "timestamp": "2026-10-14T06:04:41.823636+00:00"}
-{"email_id": "E005", "step": "ACTION validate_draft", "detail": "check reply (repairs=0)", "timestamp": "2026-10-14T06:04:41.825357+00:00"}
-{"email_id": "E005", "step": "OBSERVATION", "detail": "issues=[]", "timestamp": "2026-10-14T06:04:41.826966+00:00"}
-{"email_id": "E005", "step": "DECISION", "detail": "category=hostel priority=high escalate=True reason='Electrical and water hazard in the corridor reported (HOSTEL-3, ESC-1).'", "timestamp": "2026-10-14T06:04:41.827830+00:00"}
-{"email_id": "E010", "step": "PLAN", "detail": "triage -> lookup cited codes -> validate escalation -> validate/repair draft -> decide | subject='LMS account locked'", "timestamp": "2026-10-14T06:04:41.829334+00:00"}
-{"email_id": "E010", "step": "ACTION triage", "detail": "LLM classify + draft", "timestamp": "2026-10-14T06:04:41.831999+00:00"}
-{"email_id": "E010", "step": "OBSERVATION", "detail": "category=technical escalate=False cited=['TECH-1']", "timestamp": "2026-10-14T06:04:45.507259+00:00"}
-{"email_id": "E010", "step": "ACTION lookup_policy", "detail": "TECH-1", "timestamp": "2026-10-14T06:04:45.509978+00:00"}
-{"email_id": "E010", "step": "OBSERVATION", "detail": "TECH-1: Portal/LMS accounts lock after 5 failed login attempts. Reset through the IT Hel", "timestamp": "2026-10-14T06:04:45.513143+00:00"}
-{"email_id": "E010", "step": "ACTION validate_draft", "detail": "check reply (repairs=0)", "timestamp": "2026-10-14T06:04:45.516167+00:00"}
-{"email_id": "E010", "step": "OBSERVATION", "detail": "issues=[]", "timestamp": "2026-10-14T06:04:45.529430+00:00"}
-{"email_id": "E010", "step": "DECISION", "detail": "category=technical priority=medium escalate=False reason=''", "timestamp": "2026-10-14T06:04:45.532028+00:00"}
-{"email_id": "E013", "step": "PLAN", "detail": "triage -> lookup cited codes -> validate escalation -> validate/repair draft -> decide | subject='Late fee charged unfairly'", "timestamp": "2026-10-14T06:04:45.539455+00:00"}
-{"email_id": "E013", "step": "ACTION triage", "detail": "LLM classify + draft", "timestamp": "2026-10-14T06:04:45.542504+00:00"}
-{"email_id": "E013", "step": "OBSERVATION", "detail": "category=fee escalate=True cited=['ESC-4', 'FEE-2']", "timestamp": "2026-10-14T06:04:52.673068+00:00"}
-{"email_id": "E013", "step": "ACTION lookup_policy", "detail": "ESC-4", "timestamp": "2026-10-14T06:04:52.675988+00:00"}
-{"email_id": "E013", "step": "OBSERVATION", "detail": "ESC-4: Legal or media threats: escalate to the Registrar's Office. Do not argue or admi", "timestamp": "2026-10-14T06:04:52.676881+00:00"}
-{"email_id": "E013", "step": "ACTION lookup_policy", "detail": "FEE-2", "timestamp": "2026-10-14T06:04:52.677702+00:00"}
-{"email_id": "E013", "step": "OBSERVATION", "detail": "FEE-2: Fees paid after the due date carry a late fee of Rs. 500 per week. Late fee waiv", "timestamp": "2026-10-14T06:04:52.680006+00:00"}
-{"email_id": "E013", "step": "OBSERVATION", "detail": "validator confirmed ESC-4", "timestamp": "2026-10-14T06:04:52.681652+00:00"}
-{"email_id": "E013", "step": "ACTION validate_draft", "detail": "check reply (repairs=0)", "timestamp": "2026-10-14T06:04:52.683360+00:00"}
-{"email_id": "E013", "step": "OBSERVATION", "detail": "issues=[]", "timestamp": "2026-10-14T06:04:52.684968+00:00"}
-{"email_id": "E013", "step": "DECISION", "detail": "category=fee priority=high escalate=True reason='Legal and media threats regarding fee charges require escalation to the Registra'", "timestamp": "2026-10-14T06:04:52.686033+00:00"}
-{"email_id": "E020", "step": "PLAN", "detail": "triage -> lookup cited codes -> validate escalation -> validate/repair draft -> decide | subject='THIRD email about re-evaluation'", "timestamp": "2026-10-14T06:04:52.687710+00:00"}
-{"email_id": "E020", "step": "ACTION triage", "detail": "LLM classify + draft", "timestamp": "2026-10-14T06:04:52.688930+00:00"}
-{"email_id": "E020", "step": "OBSERVATION", "detail": "category=academic escalate=True cited=['ACAD-4', 'ESC-5']", "timestamp": "2026-10-14T06:04:54.730455+00:00"}
-{"email_id": "E020", "step": "ACTION lookup_policy", "detail": "ACAD-4", "timestamp": "2026-10-14T06:04:54.733062+00:00"}
-{"email_id": "E020", "step": "OBSERVATION", "detail": "ACAD-4: Re-evaluation: apply within 7 days of result announcement, with a fee of Rs. 100", "timestamp": "2026-10-14T06:04:54.734528+00:00"}
-{"email_id": "E020", "step": "ACTION lookup_policy", "detail": "ESC-5", "timestamp": "2026-10-14T06:04:54.735293+00:00"}
-{"email_id": "E020", "step": "OBSERVATION", "detail": "ESC-5: Overdue complaints (past the stated response time) or outages affecting many use", "timestamp": "2026-10-14T06:04:54.736675+00:00"}
-{"email_id": "E020", "step": "OBSERVATION", "detail": "validator confirmed ESC-5", "timestamp": "2026-10-14T06:04:54.739743+00:00"}
-{"email_id": "E020", "step": "ACTION validate_draft", "detail": "check reply (repairs=0)", "timestamp": "2026-10-14T06:04:54.741730+00:00"}
-{"email_id": "E020", "step": "OBSERVATION", "detail": "issues=[]", "timestamp": "2026-10-14T06:04:54.743216+00:00"}
-{"email_id": "E020", "step": "DECISION", "detail": "category=academic priority=high escalate=True reason='Re-evaluation request outcome is severely overdue (25 days vs 15 working days po'", "timestamp": "2026-10-14T06:04:54.744973+00:00"}
+{"email_id": "RUN", "step": "PLAN", "detail": "DEMO: simulated failure mode — timeout each email; bad JSON every 3rd; bad draft every 5th", "timestamp": "2026-10-14T06:34:04.669881+00:00"}
+{"email_id": "E001", "step": "PLAN", "detail": "triage -> lookup cited codes -> validate escalation -> validate/repair draft -> decide | subject='Late fee waiver request' | DEMO failures armed", "timestamp": "2026-10-14T06:34:04.671169+00:00"}
+{"email_id": "E001", "step": "ACTION triage", "detail": "LLM classify + draft", "timestamp": "2026-10-14T06:34:04.671751+00:00"}
+{"email_id": "E001", "step": "OBSERVATION", "detail": "DEMO: simulated failure HTTP 503 timeout", "timestamp": "2026-10-14T06:34:04.672823+00:00"}
+{"email_id": "E001", "step": "ACTION retry", "detail": "triage failed (TimeoutError: DEMO: simulated failure HTTP 503 timeout); backoff 2s attempt 1/2", "timestamp": "2026-10-14T06:34:04.673476+00:00"}
+{"email_id": "E001", "step": "OBSERVATION", "detail": "category=fee escalate=False cited=['FEE-2']", "timestamp": "2026-10-14T06:34:19.457202+00:00"}
+{"email_id": "E001", "step": "ACTION lookup_policy", "detail": "FEE-2", "timestamp": "2026-10-14T06:34:19.458094+00:00"}
+{"email_id": "E001", "step": "OBSERVATION", "detail": "FEE-2: Fees paid after the due date carry a late fee of Rs. 500 per week. Late fee waiv", "timestamp": "2026-10-14T06:34:19.458771+00:00"}
+{"email_id": "E001", "step": "ACTION validate_draft", "detail": "check reply (repairs=0)", "timestamp": "2026-10-14T06:34:19.460232+00:00"}
+{"email_id": "E001", "step": "OBSERVATION", "detail": "issues=[]", "timestamp": "2026-10-14T06:34:19.461244+00:00"}
+{"email_id": "E001", "step": "DECISION", "detail": "category=fee priority=low escalate=False reason=''", "timestamp": "2026-10-14T06:34:19.461832+00:00"}
+{"email_id": "E002", "step": "PLAN", "detail": "triage -> lookup cited codes -> validate escalation -> validate/repair draft -> decide | subject='Can I pay my fee in parts?' | DEMO failures armed", "timestamp": "2026-10-14T06:34:19.462896+00:00"}
+{"email_id": "E002", "step": "ACTION triage", "detail": "LLM classify + draft", "timestamp": "2026-10-14T06:34:19.463548+00:00"}
+{"email_id": "E002", "step": "OBSERVATION", "detail": "DEMO: simulated failure HTTP 503 timeout", "timestamp": "2026-10-14T06:34:19.464312+00:00"}
+{"email_id": "E002", "step": "ACTION retry", "detail": "triage failed (TimeoutError: DEMO: simulated failure HTTP 503 timeout); backoff 2s attempt 1/2", "timestamp": "2026-10-14T06:34:19.465092+00:00"}
+{"email_id": "E002", "step": "OBSERVATION", "detail": "category=fee escalate=False cited=['FEE-3']", "timestamp": "2026-10-14T06:34:33.891269+00:00"}
+{"email_id": "E002", "step": "ACTION lookup_policy", "detail": "FEE-3", "timestamp": "2026-10-14T06:34:33.892361+00:00"}
+{"email_id": "E002", "step": "OBSERVATION", "detail": "FEE-3: Installments: a student applies to the Accounts Office before the due date, with", "timestamp": "2026-10-14T06:34:33.893162+00:00"}
+{"email_id": "E002", "step": "ACTION validate_draft", "detail": "check reply (repairs=0)", "timestamp": "2026-10-14T06:34:33.894664+00:00"}
+{"email_id": "E002", "step": "OBSERVATION", "detail": "issues=[]", "timestamp": "2026-10-14T06:34:33.895591+00:00"}
+{"email_id": "E002", "step": "DECISION", "detail": "category=fee priority=medium escalate=False reason=''", "timestamp": "2026-10-14T06:34:33.896202+00:00"}
+{"email_id": "E003", "step": "PLAN", "detail": "triage -> lookup cited codes -> validate escalation -> validate/repair draft -> decide | subject='Refund request' | DEMO failures armed", "timestamp": "2026-10-14T06:34:33.897202+00:00"}
+{"email_id": "E003", "step": "ACTION triage", "detail": "LLM classify + draft", "timestamp": "2026-10-14T06:34:33.897698+00:00"}
+{"email_id": "E003", "step": "OBSERVATION", "detail": "DEMO: simulated failure — first LLM JSON answer will be invalid", "timestamp": "2026-10-14T06:34:33.898921+00:00"}
+{"email_id": "E003", "step": "OBSERVATION", "detail": "DEMO: simulated failure HTTP 503 timeout", "timestamp": "2026-10-14T06:34:33.899699+00:00"}
+{"email_id": "E003", "step": "ACTION retry", "detail": "triage failed (TimeoutError: DEMO: simulated failure HTTP 503 timeout); backoff 2s attempt 1/2", "timestamp": "2026-10-14T06:34:33.900312+00:00"}
+{"email_id": "E003", "step": "OBSERVATION", "detail": "category=fee escalate=False cited=['FEE-4']", "timestamp": "2026-10-14T06:35:09.751097+00:00"}
+{"email_id": "E003", "step": "ACTION lookup_policy", "detail": "FEE-4", "timestamp": "2026-10-14T06:35:09.752287+00:00"}
+{"email_id": "E003", "step": "OBSERVATION", "detail": "FEE-4: Refunds: withdrawal before semester start gets an 80% refund. Withdrawal within ", "timestamp": "2026-10-14T06:35:09.753109+00:00"}
+{"email_id": "E003", "step": "ACTION validate_draft", "detail": "check reply (repairs=0)", "timestamp": "2026-10-14T06:35:09.754368+00:00"}
+{"email_id": "E003", "step": "OBSERVATION", "detail": "issues=[]", "timestamp": "2026-10-14T06:35:09.755140+00:00"}
+{"email_id": "E003", "step": "DECISION", "detail": "category=fee priority=medium escalate=False reason=''", "timestamp": "2026-10-14T06:35:09.755720+00:00"}
+{"email_id": "E004", "step": "PLAN", "detail": "triage -> lookup cited codes -> validate escalation -> validate/repair draft -> decide | subject='Geyser not working Room 214' | DEMO failures armed", "timestamp": "2026-10-14T06:35:09.757720+00:00"}
+{"email_id": "E004", "step": "ACTION triage", "detail": "LLM classify + draft", "timestamp": "2026-10-14T06:35:09.758478+00:00"}
+{"email_id": "E004", "step": "OBSERVATION", "detail": "DEMO: simulated failure HTTP 503 timeout", "timestamp": "2026-10-14T06:35:09.759205+00:00"}
+{"email_id": "E004", "step": "ACTION retry", "detail": "triage failed (TimeoutError: DEMO: simulated failure HTTP 503 timeout); backoff 2s attempt 1/2", "timestamp": "2026-10-14T06:35:09.759851+00:00"}
+{"email_id": "E004", "step": "OBSERVATION", "detail": "category=hostel escalate=True cited=['HOSTEL-1', 'HOSTEL-2', 'ESC-5']", "timestamp": "2026-10-14T06:35:27.738095+00:00"}
+{"email_id": "E004", "step": "ACTION lookup_policy", "detail": "HOSTEL-1", "timestamp": "2026-10-14T06:35:27.739165+00:00"}
+{"email_id": "E004", "step": "OBSERVATION", "detail": "HOSTEL-1: Maintenance complaints (plumbing, electricity, furniture) are logged with the ro", "timestamp": "2026-10-14T06:35:27.741172+00:00"}
+{"email_id": "E004", "step": "ACTION lookup_policy", "detail": "HOSTEL-2", "timestamp": "2026-10-14T06:35:27.742056+00:00"}
+{"email_id": "E004", "step": "OBSERVATION", "detail": "HOSTEL-2: Complaints unresolved after 48 hours must be escalated to the Hostel Warden.", "timestamp": "2026-10-14T06:35:27.742783+00:00"}
+{"email_id": "E004", "step": "ACTION lookup_policy", "detail": "ESC-5", "timestamp": "2026-10-14T06:35:27.743489+00:00"}
+{"email_id": "E004", "step": "OBSERVATION", "detail": "ESC-5: Overdue complaints (past the stated response time) or outages affecting many use", "timestamp": "2026-10-14T06:35:27.744216+00:00"}
+{"email_id": "E004", "step": "OBSERVATION", "detail": "validator confirmed ESC-5", "timestamp": "2026-10-14T06:35:27.745507+00:00"}
+{"email_id": "E004", "step": "ACTION validate_draft", "detail": "check reply (repairs=0)", "timestamp": "2026-10-14T06:35:27.746297+00:00"}
+{"email_id": "E004", "step": "OBSERVATION", "detail": "issues=[]", "timestamp": "2026-10-14T06:35:27.750482+00:00"}
+{"email_id": "E004", "step": "DECISION", "detail": "category=hostel priority=high escalate=True reason='Maintenance complaint unresolved after 48 hours and reported multiple times with'", "timestamp": "2026-10-14T06:35:27.751572+00:00"}
+{"email_id": "E005", "step": "PLAN", "detail": "triage -> lookup cited codes -> validate escalation -> validate/repair draft -> decide | subject='URGENT: sparking wire in Block A corridor' | DEMO failures armed", "timestamp": "2026-10-14T06:35:27.757199+00:00"}
+{"email_id": "E005", "step": "ACTION triage", "detail": "LLM classify + draft", "timestamp": "2026-10-14T06:35:27.759397+00:00"}
+{"email_id": "E005", "step": "OBSERVATION", "detail": "DEMO: simulated failure HTTP 503 timeout", "timestamp": "2026-10-14T06:35:27.760565+00:00"}
+{"email_id": "E005", "step": "ACTION retry", "detail": "triage failed (TimeoutError: DEMO: simulated failure HTTP 503 timeout); backoff 2s attempt 1/2", "timestamp": "2026-10-14T06:35:27.762500+00:00"}
+{"email_id": "E005", "step": "OBSERVATION", "detail": "category=hostel escalate=True cited=['HOSTEL-3', 'ESC-1']", "timestamp": "2026-10-14T06:35:39.062019+00:00"}
+{"email_id": "E005", "step": "ACTION lookup_policy", "detail": "HOSTEL-3", "timestamp": "2026-10-14T06:35:39.062860+00:00"}
+{"email_id": "E005", "step": "OBSERVATION", "detail": "HOSTEL-3: Any electrical, fire or structural hazard is an emergency. Escalate immediately ", "timestamp": "2026-10-14T06:35:39.063752+00:00"}
+{"email_id": "E005", "step": "ACTION lookup_policy", "detail": "ESC-1", "timestamp": "2026-10-14T06:35:39.064685+00:00"}
+{"email_id": "E005", "step": "OBSERVATION", "detail": "ESC-1: Safety hazards (fire, electrical, structural): escalate immediately to the Hoste", "timestamp": "2026-10-14T06:35:39.065887+00:00"}
+{"email_id": "E005", "step": "OBSERVATION", "detail": "validator confirmed ESC-1", "timestamp": "2026-10-14T06:35:39.067243+00:00"}
+{"email_id": "E005", "step": "OBSERVATION", "detail": "DEMO: simulated failure — bad draft injected (>150 words, wrong sign-off, invented office)", "timestamp": "2026-10-14T06:35:39.068252+00:00"}
+{"email_id": "E005", "step": "ACTION validate_draft", "detail": "check reply (repairs=0)", "timestamp": "2026-10-14T06:35:39.068914+00:00"}
+{"email_id": "E005", "step": "OBSERVATION", "detail": "issues=['word count 247 exceeds 150', \"missing or impure sign-off (must be exactly 'Student Helpdesk')\", 'missing next step line', 'invented office name: Quantum Affairs Office', 'invented office name: Campus Bot Team']", "timestamp": "2026-10-14T06:35:39.070004+00:00"}
+{"email_id": "E005", "step": "ACTION repair_draft", "detail": "LLM repair #1 for 5 issue(s)", "timestamp": "2026-10-14T06:35:39.070608+00:00"}
+{"email_id": "E005", "step": "ACTION validate_draft", "detail": "check reply (repairs=1)", "timestamp": "2026-10-14T06:35:49.358757+00:00"}
+{"email_id": "E005", "step": "OBSERVATION", "detail": "issues=[]", "timestamp": "2026-10-14T06:35:49.359724+00:00"}
+{"email_id": "E005", "step": "DECISION", "detail": "category=hostel priority=high escalate=True reason='Electrical and water hazard in hostel corridor requiring immediate escalation un'", "timestamp": "2026-10-14T06:35:49.361167+00:00"}
+{"email_id": "E006", "step": "PLAN", "detail": "triage -> lookup cited codes -> validate escalation -> validate/repair draft -> decide | subject='Room change request' | DEMO failures armed", "timestamp": "2026-10-14T06:35:49.362340+00:00"}
+{"email_id": "E006", "step": "ACTION triage", "detail": "LLM classify + draft", "timestamp": "2026-10-14T06:35:49.363007+00:00"}
+{"email_id": "E006", "step": "OBSERVATION", "detail": "DEMO: simulated failure — first LLM JSON answer will be invalid", "timestamp": "2026-10-14T06:35:49.363795+00:00"}
+{"email_id": "E006", "step": "OBSERVATION", "detail": "DEMO: simulated failure HTTP 503 timeout", "timestamp": "2026-10-14T06:35:49.364660+00:00"}
+{"email_id": "E006", "step": "ACTION retry", "detail": "triage failed (TimeoutError: DEMO: simulated failure HTTP 503 timeout); backoff 2s attempt 1/2", "timestamp": "2026-10-14T06:35:49.366304+00:00"}
+{"email_id": "E006", "step": "OBSERVATION", "detail": "category=hostel escalate=False cited=['HOSTEL-4']", "timestamp": "2026-10-14T06:36:08.425917+00:00"}
+{"email_id": "E006", "step": "ACTION lookup_policy", "detail": "HOSTEL-4", "timestamp": "2026-10-14T06:36:08.426878+00:00"}
+{"email_id": "E006", "step": "OBSERVATION", "detail": "HOSTEL-4: Room changes are accepted through the Warden's office in the first two weeks of ", "timestamp": "2026-10-14T06:36:08.428105+00:00"}
+{"email_id": "E006", "step": "ACTION validate_draft", "detail": "check reply (repairs=0)", "timestamp": "2026-10-14T06:36:08.429384+00:00"}
+{"email_id": "E006", "step": "OBSERVATION", "detail": "issues=[]", "timestamp": "2026-10-14T06:36:08.430910+00:00"}
+{"email_id": "E006", "step": "DECISION", "detail": "category=hostel priority=medium escalate=False reason=''", "timestamp": "2026-10-14T06:36:08.431815+00:00"}
+{"email_id": "RUN", "step": "DECISION", "detail": "DEMO recovery summary: injected=9 recovered=9 safe_fallback=0 (timeout 6/6, bad_json 2/2, bad_draft 1/1)", "timestamp": "2026-10-14T06:36:08.436126+00:00"}
