@@ -33,3 +33,5 @@ Thumbs.db
 logs/
 outbox*.json
 *.zip
+
+STUDY_AND_DEMO_GUIDE.md
