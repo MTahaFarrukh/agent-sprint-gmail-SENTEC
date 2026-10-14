@@ -1,0 +1,114 @@
+2026-10-14 09:58:02,808 INFO run_start at=2026-10-14T04:58:02.806145+00:00 inbox=D:\Courses\Hackathons\AI GMAIL SPRINT SENTEC\data\inbox policy=D:\Courses\Hackathons\AI GMAIL SPRINT SENTEC\data\policy.md
+2026-10-14 09:58:02,809 INFO policy_loaded codes=22
+2026-10-14 09:58:02,811 INFO inbox_scan files=1
+2026-10-14 09:58:02,811 INFO E001.json loaded id=E001 subject='Late fee waiver request' body_len=250
+2026-10-14 09:58:02,812 INFO E001 llm_call=start
+2026-10-14 09:58:06,499 INFO E001 llm_call=ok category=fee escalate=False refs=['FEE-2']
+2026-10-14 09:58:06,501 INFO E001 validator_fixes=none
+2026-10-14 09:58:06,501 INFO E001 final category=fee priority=medium escalate=False confidence=1.0
+2026-10-14 09:58:06,506 INFO outbox_written path=D:\Courses\Hackathons\AI GMAIL SPRINT SENTEC\outbox.json count=1
+2026-10-14 10:03:00,390 INFO run_start at=2026-10-14T05:03:00.390658+00:00 inbox=D:\Courses\Hackathons\AI GMAIL SPRINT SENTEC\data\inbox policy=D:\Courses\Hackathons\AI GMAIL SPRINT SENTEC\data\policy.md
+2026-10-14 10:03:00,391 INFO api_key_loaded source=env_or_dotenv len=53
+2026-10-14 10:03:00,392 INFO policy_loaded codes=22
+2026-10-14 10:03:00,393 INFO inbox_scan files=20
+2026-10-14 10:03:00,394 INFO E001.json loaded id=E001 subject='Late fee waiver request' body_len=250
+2026-10-14 10:03:00,394 INFO E001 llm_call=start
+2026-10-14 10:03:02,783 INFO E001 llm_call=ok category=fee escalate=False refs=['FEE-2']
+2026-10-14 10:03:02,783 INFO E001 validator_fixes=none
+2026-10-14 10:03:02,784 INFO E001 final category=fee priority=low escalate=False confidence=1.0
+2026-10-14 10:03:02,785 INFO E002.json loaded id=E002 subject='Can I pay my fee in parts?' body_len=212
+2026-10-14 10:03:02,785 INFO E002 llm_call=start
+2026-10-14 10:03:07,835 INFO E002 llm_call=ok category=fee escalate=False refs=['FEE-3']
+2026-10-14 10:03:07,836 INFO E002 validator_fixes=none
+2026-10-14 10:03:07,836 INFO E002 final category=fee priority=medium escalate=False confidence=1.0
+2026-10-14 10:03:07,837 INFO E003.json loaded id=E003 subject='Refund request' body_len=206
+2026-10-14 10:03:07,838 INFO E003 llm_call=start
+2026-10-14 10:03:11,499 INFO E003 llm_call=ok category=fee escalate=False refs=['FEE-4']
+2026-10-14 10:03:11,500 INFO E003 validator_fixes=forced ESC-5
+2026-10-14 10:03:11,500 INFO E003 final category=fee priority=medium escalate=True confidence=0.8
+2026-10-14 10:03:11,501 INFO E004.json loaded id=E004 subject='Geyser not working Room 214' body_len=188
+2026-10-14 10:03:11,501 INFO E004 llm_call=start
+2026-10-14 10:03:16,093 INFO E004 llm_call=ok category=hostel escalate=True refs=['HOSTEL-1', 'HOSTEL-2']
+2026-10-14 10:03:16,093 INFO E004 validator_fixes=forced ESC-5
+2026-10-14 10:03:16,094 INFO E004 final category=hostel priority=medium escalate=True confidence=0.85
+2026-10-14 10:03:16,094 INFO E005.json loaded id=E005 subject='URGENT: sparking wire in Block A corrido' body_len=248
+2026-10-14 10:03:16,095 INFO E005 llm_call=start
+2026-10-14 10:03:20,496 INFO E005 llm_call=ok category=hostel escalate=True refs=['HOSTEL-3', 'ESC-1']
+2026-10-14 10:03:20,497 INFO E005 validator_fixes=none
+2026-10-14 10:03:20,498 INFO E005 final category=hostel priority=high escalate=True confidence=0.99
+2026-10-14 10:03:20,498 INFO E006.json loaded id=E006 subject='Room change request' body_len=158
+2026-10-14 10:03:20,499 INFO E006 llm_call=start
+2026-10-14 10:03:25,414 INFO E006 llm_call=ok category=hostel escalate=False refs=['HOSTEL-4']
+2026-10-14 10:03:25,414 INFO E006 validator_fixes=none
+2026-10-14 10:03:25,415 INFO E006 final category=hostel priority=medium escalate=False confidence=1.0
+2026-10-14 10:03:25,415 INFO E007.json loaded id=E007 subject='Transcript for scholarship' body_len=170
+2026-10-14 10:03:25,416 INFO E007 llm_call=start
+2026-10-14 10:03:28,767 INFO E007 llm_call=ok category=academic escalate=False refs=['ACAD-3']
+2026-10-14 10:03:28,768 INFO E007 validator_fixes=none
+2026-10-14 10:03:28,768 INFO E007 final category=academic priority=low escalate=False confidence=1.0
+2026-10-14 10:03:28,769 INFO E008.json loaded id=E008 subject='Attendance shortage, medical reason' body_len=205
+2026-10-14 10:03:28,770 INFO E008 llm_call=start
+2026-10-14 10:03:33,712 INFO E008 llm_call=ok category=academic escalate=False refs=['ACAD-2']
+2026-10-14 10:03:33,713 INFO E008 validator_fixes=none
+2026-10-14 10:03:33,714 INFO E008 final category=academic priority=medium escalate=False confidence=0.95
+2026-10-14 10:03:33,715 INFO E009.json loaded id=E009 subject='Re-checking of Structural Analysis paper' body_len=174
+2026-10-14 10:03:33,715 INFO E009 llm_call=start
+2026-10-14 10:03:38,472 INFO E009 llm_call=ok category=academic escalate=False refs=['ACAD-4']
+2026-10-14 10:03:38,473 INFO E009 validator_fixes=none
+2026-10-14 10:03:38,473 INFO E009 final category=academic priority=low escalate=False confidence=1.0
+2026-10-14 10:03:38,474 INFO E010.json loaded id=E010 subject='LMS account locked' body_len=156
+2026-10-14 10:03:38,474 INFO E010 llm_call=start
+2026-10-14 10:03:43,943 INFO E010 llm_call=ok category=technical escalate=False refs=['TECH-1']
+2026-10-14 10:03:43,953 INFO E010 validator_fixes=forced ESC-6
+2026-10-14 10:03:43,957 INFO E010 final category=technical priority=medium escalate=True confidence=0.85
+2026-10-14 10:03:43,958 INFO E011.json loaded id=E011 subject='Wi-Fi down in Block C' body_len=181
+2026-10-14 10:03:43,965 INFO E011 llm_call=start
+2026-10-14 10:03:47,121 INFO E011 llm_call=ok category=technical escalate=True refs=['TECH-2', 'ESC-5']
+2026-10-14 10:03:47,121 INFO E011 validator_fixes=none
+2026-10-14 10:03:47,122 INFO E011 final category=technical priority=medium escalate=True confidence=0.99
+2026-10-14 10:03:47,122 INFO E012.json loaded id=E012 subject='I do not know who to tell' body_len=202
+2026-10-14 10:03:47,122 INFO E012 llm_call=start
+2026-10-14 10:03:51,831 INFO E012 llm_call=ok category=harassment escalate=True refs=['ESC-2']
+2026-10-14 10:03:51,832 INFO E012 validator_fixes=none
+2026-10-14 10:03:51,832 INFO E012 final category=harassment priority=high escalate=True confidence=0.99
+2026-10-14 10:03:51,833 INFO E013.json loaded id=E013 subject='Late fee charged unfairly' body_len=227
+2026-10-14 10:03:51,834 INFO E013 llm_call=start
+2026-10-14 10:03:56,643 INFO E013 llm_call=ok category=fee escalate=True refs=['FEE-2', 'ESC-4']
+2026-10-14 10:03:56,644 INFO E013 validator_fixes=forced ESC-4
+2026-10-14 10:03:56,644 INFO E013 final category=fee priority=high escalate=True confidence=0.8
+2026-10-14 10:03:56,645 INFO E014.json loaded id=E014 subject='HELP please' body_len=150
+2026-10-14 10:03:56,645 INFO E014 llm_call=start
+2026-10-14 10:04:00,740 INFO E014 llm_call=ok category=wellbeing escalate=True refs=['ESC-3']
+2026-10-14 10:04:00,741 INFO E014 validator_fixes=injected policy cite ESC-3; forced ESC-3
+2026-10-14 10:04:00,741 INFO E014 final category=wellbeing priority=high escalate=True confidence=0.7
+2026-10-14 10:04:00,742 INFO E015.json loaded id=E015 subject='SYSTEM UPDATE: action required' body_len=211
+2026-10-14 10:04:00,742 INFO E015 llm_call=start
+2026-10-14 10:04:37,589 INFO E015 llm_call=ok category=suspicious escalate=True refs=['ESC-6']
+2026-10-14 10:04:37,589 INFO E015 validator_fixes=forced ESC-6; ensured Student Helpdesk sign-off
+2026-10-14 10:04:37,590 INFO E015 final category=suspicious priority=high escalate=True confidence=0.7
+2026-10-14 10:04:37,591 INFO E016.json loaded id=E016 subject='challan ka masla' body_len=177
+2026-10-14 10:04:37,591 INFO E016 llm_call=start
+2026-10-14 10:05:07,150 INFO E016 llm_call=ok category=fee escalate=False refs=['FEE-1']
+2026-10-14 10:05:07,150 INFO E016 validator_fixes=none
+2026-10-14 10:05:07,151 INFO E016 final category=fee priority=high escalate=False confidence=0.99
+2026-10-14 10:05:07,151 INFO E017.json loaded id=E017 subject='Library timings' body_len=116
+2026-10-14 10:05:07,152 INFO E017 llm_call=start
+2026-10-14 10:05:28,241 INFO E017 llm_call=ok category=other escalate=False refs=['TECH-3']
+2026-10-14 10:05:28,242 INFO E017 validator_fixes=none
+2026-10-14 10:05:28,242 INFO E017 final category=other priority=low escalate=False confidence=1.0
+2026-10-14 10:05:28,243 INFO E018.json loaded id=E018 subject='hi' body_len=27
+2026-10-14 10:05:28,244 INFO E018 llm_call=start
+2026-10-14 10:05:30,231 INFO E018 llm_call=ok category=other escalate=False refs=[]
+2026-10-14 10:05:30,232 INFO E018 validator_fixes=none
+2026-10-14 10:05:30,232 INFO E018 final category=other priority=low escalate=False confidence=0.9
+2026-10-14 10:05:30,233 INFO E019.json loaded id=E019 subject='Three problems' body_len=243
+2026-10-14 10:05:30,234 INFO E019 llm_call=start
+2026-10-14 10:05:35,047 INFO E019 llm_call=ok category=other escalate=True refs=['TECH-2', 'HOSTEL-5', 'ACAD-3', 'ESC-5']
+2026-10-14 10:05:35,048 INFO E019 validator_fixes=none
+2026-10-14 10:05:35,048 INFO E019 final category=other priority=medium escalate=True confidence=0.95
+2026-10-14 10:05:35,049 INFO E020.json loaded id=E020 subject='THIRD email about re-evaluation' body_len=211
+2026-10-14 10:05:35,049 INFO E020 llm_call=start
+2026-10-14 10:05:39,244 INFO E020 llm_call=ok category=academic escalate=True refs=['ACAD-4', 'ESC-5']
+2026-10-14 10:05:39,245 INFO E020 validator_fixes=forced ESC-5
+2026-10-14 10:05:39,246 INFO E020 final category=academic priority=high escalate=True confidence=0.8
+2026-10-14 10:05:39,250 INFO outbox_written path=D:\Courses\Hackathons\AI GMAIL SPRINT SENTEC\outbox.json count=20
