@@ -522,3 +522,13 @@
 2026-10-14 11:04:11,763 INFO E020 final category=academic priority=high escalate=True confidence=0.84
 2026-10-14 11:04:11,770 INFO outbox_written path=C:\UZZAM WORK\Agent Sprint (Sentec)\agent-sprint-gmail-SENTEC\outbox.json count=20
 >>>>>>> b219fadf6c7949ad90ab7fd9e0ddfce0feff6882
+2026-10-14 11:13:53,298 INFO run_start at=2026-10-14T06:13:53.298246+00:00 inbox=C:\UZZAM WORK\Agent Sprint (Sentec)\agent-sprint-gmail-SENTEC\data\inbox policy=C:\UZZAM WORK\Agent Sprint (Sentec)\agent-sprint-gmail-SENTEC\data\policy.md
+2026-10-14 11:13:53,298 INFO api_key_loaded source=env_or_dotenv len=53
+2026-10-14 11:13:53,300 INFO policy_loaded codes=22
+2026-10-14 11:13:53,301 INFO ids_filter=E021
+2026-10-14 11:13:53,302 INFO inbox_scan files=1
+2026-10-14 11:13:53,315 INFO E021.json loaded id=E021 subject='Hazrat Legacy' body_len=57
+2026-10-14 11:13:56,019 INFO E021 llm_call=ok category=hostel escalate=False refs=['HOSTEL-1']
+2026-10-14 11:13:56,023 INFO E021 validator_fixes=none
+2026-10-14 11:13:56,032 INFO E021 final category=hostel priority=medium escalate=False confidence=0.95
+2026-10-14 11:13:56,038 INFO outbox_written path=C:\Users\muham\AppData\Local\Temp\outbox_partial_ntbh_q8n.json count=1

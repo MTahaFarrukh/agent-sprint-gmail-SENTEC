@@ -265,5 +265,18 @@
     "reply_draft": "Dear Talha Iqbal,\n\nWe apologize for the delay regarding your re-evaluation request submitted 25 days ago. Under policy ACAD-4, outcomes for re-evaluation are processed within 15 working days through the Examination Department. Since this timeframe has been exceeded, your query has been escalated to the Examination Department under ESC-5 for urgent review.\n\nNext step: Await direct follow-up from the Examination Department regarding your re-evaluation result.\n\nStudent Helpdesk",
     "confidence": 0.84,
     "agent_notes": "Student is following up on a re-evaluation request submitted 25 days ago, exceeding the 15 working days limit in ACAD-4. Overdue condition met under ESC-5. Validator: forced ESC-5"
+  },
+  {
+    "email_id": "E021",
+    "category": "hostel",
+    "priority": "medium",
+    "escalate": false,
+    "escalation_reason": "",
+    "policy_refs": [
+      "HOSTEL-1"
+    ],
+    "reply_draft": "Dear Hazrat,\n\nAp ki complaint hostel bathroom k nal chori k hawaly sy note kr li gai hai. Maintenance complaints (plumbing, electricity, furniture) room number k sath log ki jati hain aur HOSTEL-1 k tehat 48 hours mein resolve ki jati hain.\n\nNext step: Apna room number hostel office ya maintenance team ko provide karein ta k nal jald fix kiya ja saky.\nStudent Helpdesk",
+    "confidence": 0.95,
+    "agent_notes": "Student reported stolen bathroom taps in Roman Urdu. Handled as a plumbing maintenance complaint under HOSTEL-1."
   }
 ]
