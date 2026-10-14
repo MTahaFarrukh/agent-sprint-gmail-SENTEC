@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import traceback
 from dataclasses import asdict, dataclass
 from typing import Any, Mapping
@@ -9,14 +10,17 @@ from typing import Any, Mapping
 from src.config import MAX_BODY_CHARS
 from src.llm import generate_json
 
+_LLM_DEBUG = os.getenv("LLM_DEBUG", "").strip().lower() in {"1", "true", "yes"}
+
 
 def _log_classify_failure(stage: str, exc: BaseException) -> None:
-    """Print full exception type + message instead of swallowing errors."""
-    print(
-        f"[classifier:{stage}] {type(exc).__name__}: {exc}",
-        flush=True,
-    )
-    print(f"[classifier:{stage}] traceback:\n{traceback.format_exc()}", flush=True)
+    """One short failure line; traceback only when LLM_DEBUG=1."""
+    msg = str(exc).replace("\n", " ").strip()
+    if len(msg) > 200:
+        msg = msg[:199] + "…"
+    print(f"[classifier:{stage}] {type(exc).__name__}: {msg}", flush=True)
+    if _LLM_DEBUG:
+        print(f"[classifier:{stage}] traceback:\n{traceback.format_exc()}", flush=True)
 
 CATEGORIES = frozenset(
     {
@@ -177,21 +181,30 @@ def validate_classification(data: dict[str, Any]) -> Classification:
 
 
 def classify(email: Any) -> Classification:
-    """Classify one email. Retries once on invalid JSON/schema, then falls back."""
+    """Classify one email.
+
+    API failures are handled inside ``generate_json`` (no extra classifier retry).
+    Invalid / schema-failing JSON is retried once, then falls back.
+    """
     sender, subject, body = _as_email_fields(email)
     user_prompt = _build_user_prompt(sender, subject, body)
 
-    last_error = "unknown classification error"
-    for attempt in range(2):
-        try:
-            raw = generate_json(SYSTEM_PROMPT, user_prompt)
-            return validate_classification(raw)
-        except Exception as exc:  # noqa: BLE001 — intentional fallback path
-            last_error = f"{type(exc).__name__}: {exc}"
-            _log_classify_failure(f"attempt_{attempt + 1}/2", exc)
+    try:
+        raw = generate_json(SYSTEM_PROMPT, user_prompt)
+    except Exception as exc:  # noqa: BLE001 — API path already retried in llm.py
+        _log_classify_failure("api", exc)
+        return _fallback(f"classification failure: {type(exc).__name__}: {exc}")
 
-    print(
-        f"[classifier:fallback] giving up after retries: {last_error}",
-        flush=True,
-    )
-    return _fallback(f"classification failure: {last_error}")
+    try:
+        return validate_classification(raw)
+    except Exception as first_exc:  # noqa: BLE001 — invalid JSON/schema
+        _log_classify_failure("invalid_json", first_exc)
+
+    # One retry only when the model returned parseable-but-invalid schema JSON
+    try:
+        raw = generate_json(SYSTEM_PROMPT, user_prompt)
+        return validate_classification(raw)
+    except Exception as exc:  # noqa: BLE001 — fallback after single schema retry
+        _log_classify_failure("invalid_json_retry", exc)
+        return _fallback(f"classification failure: {type(exc).__name__}: {exc}")
+
