@@ -32,6 +32,7 @@ Thumbs.db
 
 logs/
 outbox*.json
+data/gmail_outbox.json
 *.zip
 
 STUDY_AND_DEMO_GUIDE.md

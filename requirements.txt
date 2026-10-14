@@ -4,3 +4,7 @@ google-genai>=1.0.0
 pandas>=2.0.0
 streamlit>=1.28.0
 plotly>=5.18.0
+# Optional — Real Gmail Mode (drafts only; never gmail.send)
+google-api-python-client>=2.100.0
+google-auth-oauthlib>=1.1.0
+google-auth-httplib2>=0.2.0

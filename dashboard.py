@@ -845,9 +845,20 @@ def render_sidebar(inbox: dict[str, dict[str, Any]], rows: list[dict[str, Any]])
     with st.sidebar:
         st.markdown(
             f'<div class="side-title">{esc(TEAM_NAME)}</div>'
-            f'<div class="side-hint">Control room · drafts only · nothing is sent</div>',
+            f'<div class="side-hint">JSON inbox · drafts only · nothing is sent</div>',
             unsafe_allow_html=True,
         )
+        # Only show when the optional Gmail page is present (local extras; not in submission zip).
+        if (ROOT / "pages" / "2_Real_Gmail_Mode.py").is_file():
+            st.page_link(
+                "pages/2_Real_Gmail_Mode.py",
+                label="Open Real Gmail Mode",
+                icon="📬",
+            )
+            st.markdown(
+                '<div class="side-hint">Separate dashboard for live Gmail fetch → triage → drafts.</div>',
+                unsafe_allow_html=True,
+            )
 
         if st.button("Run agent · full inbox", type="primary", key="run_all"):
             st.session_state["pending"] = {"mode": "all", "ids": []}

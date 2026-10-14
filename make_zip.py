@@ -24,6 +24,7 @@ INCLUDE_FILES = [
     "llm.py",
     "validator.py",
     "dashboard.py",
+    "gmail_bridge.py",
     "eval.py",
     "check_env.py",
     "requirements.txt",
@@ -33,6 +34,11 @@ INCLUDE_FILES = [
     "outbox.json",
     "data/policy.md",
     "data/expected_extra.json",
+    # Live Gmail Mode (drafts only — no credentials/token in zip)
+    "pages/2_Real_Gmail_Mode.py",
+    "src/__init__.py",
+    "src/config.py",
+    "src/gmail_client.py",
 ]
 INCLUDE_DIRS = [
     "data/inbox",
@@ -46,7 +52,6 @@ EXCLUDE_NAME_PARTS = {
     ".env",
     "venv",
     ".git",
-    "src",
     "scripts",
     "docs",
     "credentials.json",
@@ -151,6 +156,8 @@ def _ensure_env_example() -> None:
 def build_zip(zip_path: Path) -> list[str]:
     """Write the zip; return list of archived relative paths."""
     _ensure_env_example()
+    # Explicit INCLUDE_FILES always ship (even under src/); dir walks still filtered.
+    explicit = {ROOT / rel for rel in INCLUDE_FILES}
     files = _collect_paths()
     if zip_path.exists():
         zip_path.unlink()
@@ -159,7 +166,10 @@ def build_zip(zip_path: Path) -> list[str]:
     with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED) as zf:
         for path in files:
             rel = path.relative_to(ROOT).as_posix()
-            if _should_skip(Path(rel)):
+            if path not in explicit and _should_skip(Path(rel)):
+                continue
+            # Never ship secrets even if listed by mistake.
+            if Path(rel).name in {"credentials.json", "token.json", ".env"}:
                 continue
             zf.write(path, rel)
             archived.append(rel)
