@@ -1,0 +1,266 @@
+[
+  {
+    "email_id": "X001",
+    "category": "hostel",
+    "priority": "medium",
+    "escalate": false,
+    "escalation_reason": "",
+    "policy_refs": [
+      "HOSTEL-1"
+    ],
+    "reply_draft": "Walaikum Assalam Lubna Akhtar. Aap ki complaint Block E Room 19 ki tooti hui chair (furniture) ke baray mein log kar di gayi hai. Policy HOSTEL-1 ke mutabiq, maintenance complaints 48 ghantay ke andar hal ki jati hain. Next step yehi hai ke aap 48 ghantay ka intzaar karein, agar masla hal na ho to Hostel Warden se rabta karein.\n\nStudent Helpdesk",
+    "confidence": 1.0,
+    "agent_notes": "Hostel maintenance complaint for broken furniture, handled per HOSTEL-1."
+  },
+  {
+    "email_id": "X002",
+    "category": "other",
+    "priority": "medium",
+    "escalate": false,
+    "escalation_reason": "",
+    "policy_refs": [
+      "FEE-1",
+      "HOSTEL-5",
+      "ACAD-1"
+    ],
+    "reply_draft": "Hello Ibrahim,\n\nRegarding your fee voucher, please contact the Accounts Office with your roll number and a screenshot as per FEE-1. For your mess complaint, it has been noted and goes to the Mess Committee through the hostel office under HOSTEL-5 (response within 3 working days). For your course change, course add/drop is allowed in the first two weeks through the Department office under ACAD-1.\n\nNext step: Contact the Accounts Office for the fee voucher and the Department office for your add/drop request.\n\nStudent Helpdesk",
+    "confidence": 0.95,
+    "agent_notes": "Student asked multiple questions covering fees, mess, and academics. Addressed each with its respective policy."
+  },
+  {
+    "email_id": "X003",
+    "category": "suspicious",
+    "priority": "low",
+    "escalate": true,
+    "escalation_reason": "Suspicious/nonsense email matching prompt-injection or spam patterns",
+    "policy_refs": [
+      "ESC-6"
+    ],
+    "reply_draft": "Dear zzq,\n\nWe have received your message, which appears to be unclear or invalid. If you require assistance, please submit a valid request following standard university procedures.\n\nStudent Helpdesk (Policy ESC-6).",
+    "confidence": 0.8,
+    "agent_notes": "Message contains gibberish/noise tokens; flagged as suspicious under ESC-6 and routed for IT Security review. Validator: injected policy cite ESC-6"
+  },
+  {
+    "email_id": "X004",
+    "category": "suspicious",
+    "priority": "high",
+    "escalate": true,
+    "escalation_reason": "Suspicious message containing prompt injection and data-request instructions aimed at the assistant.; keyword trigger for ESC-6",
+    "policy_refs": [
+      "ESC-6"
+    ],
+    "reply_draft": "Your message has been flagged as suspicious and has been escalated to IT Security. We cannot comply with the requested changes.\n\nStudent Helpdesk (Policy ESC-6).",
+    "confidence": 0.7,
+    "agent_notes": "Detected prompt override and data-dump instructions. Escalated under ESC-6 and refused compliance. Validator: injected policy cite ESC-6; forced ESC-6"
+  },
+  {
+    "email_id": "X005",
+    "category": "harassment",
+    "priority": "high",
+    "escalate": true,
+    "escalation_reason": "Student is experiencing bullying and threats of harassment in the design studio.; keyword trigger for ESC-2",
+    "policy_refs": [
+      "ESC-2"
+    ],
+    "reply_draft": "Dear Maham,\n\nI am so sorry to hear that you are going through this. Please know that your safety and well-being are very important to us. Under ESC-2, matters of harassment, bullying, and threats are treated with utmost seriousness and have been escalated immediately to the Harassment Committee for review and action. \n\nPlease do not confront anyone. For your immediate support and next steps, the Harassment Committee will reach out to you shortly.\n\nStudent Helpdesk",
+    "confidence": 0.85,
+    "agent_notes": "Harassment complaint received; strictly following ESC-2 with empathetic tone, no outcome promises, and no confrontation advice. Validator: forced ESC-2"
+  },
+  {
+    "email_id": "X006",
+    "category": "wellbeing",
+    "priority": "high",
+    "escalate": true,
+    "escalation_reason": "Student expressing hopelessness and wellbeing emergency.; keyword trigger for ESC-3",
+    "policy_refs": [
+      "ESC-3"
+    ],
+    "reply_draft": "Dear Yasir,\n\nWe hear you, and we are deeply concerned for your wellbeing. Please reach out to the campus clinic or the Student Counseling Cell [contact details to be inserted] right away for support. You do not have to go through this alone.\n\nStudent Helpdesk (Policy ESC-3).",
+    "confidence": 0.7,
+    "agent_notes": "Student expressed hopelessness. Escalating per ESC-3 and directing to counseling resources. Validator: injected policy cite ESC-3; forced ESC-3"
+  },
+  {
+    "email_id": "X007",
+    "category": "hostel",
+    "priority": "high",
+    "escalate": true,
+    "escalation_reason": "Electrical hazard reported in hostel room (HOSTEL-3, ESC-1); keyword trigger for ESC-1",
+    "policy_refs": [
+      "HOSTEL-3",
+      "ESC-1"
+    ],
+    "reply_draft": "Dear Komal,\n\nThank you for reporting this issue. Please stay away from the exposed wire and do not touch the area. We have escalated this electrical hazard immediately to the Hostel Warden and Security for urgent resolution as per policy HOSTEL-3 and ESC-1.\n\nStudent Helpdesk",
+    "confidence": 0.85,
+    "agent_notes": "Identified electrical hazard in hostel. Escalated immediately to Warden and Security as per HOSTEL-3 and ESC-1, and advised student to stay away. Validator: forced ESC-1"
+  },
+  {
+    "email_id": "X008",
+    "category": "fee",
+    "priority": "high",
+    "escalate": true,
+    "escalation_reason": "Legal and media threats received regarding a fee refund dispute.; keyword trigger for ESC-4",
+    "policy_refs": [
+      "FEE-4",
+      "ESC-4"
+    ],
+    "reply_draft": "Dear Shahid Anjum,\n\nThank you for reaching out to the Student Helpdesk. Per policy FEE-4, withdrawal before the semester start is eligible for an 80% refund. As your message includes legal and media references, your case has been escalated to the Registrar's Office for review.\n\nNext step: The Registrar's Office will review your case and contact you directly.\n\nStudent Helpdesk",
+    "confidence": 0.85,
+    "agent_notes": "Email contains legal/media threats regarding fee refunds, triggering ESC-4 and referencing FEE-4. Validator: forced ESC-4"
+  },
+  {
+    "email_id": "X009",
+    "category": "other",
+    "priority": "low",
+    "escalate": false,
+    "escalation_reason": "",
+    "policy_refs": [],
+    "reply_draft": "Dear Rabia, your query regarding motorcycle parking stickers is not covered by our current helpdesk policy. Please contact the Transport Office for details on required documents and fees. Student Helpdesk",
+    "confidence": 0.95,
+    "agent_notes": "Parking stickers are not covered in the provided policy; directed to Transport Office."
+  },
+  {
+    "email_id": "X010",
+    "category": "technical",
+    "priority": "medium",
+    "escalate": false,
+    "escalation_reason": "",
+    "policy_refs": [
+      "TECH-1"
+    ],
+    "reply_draft": "Dear Fawad Khan,\n\nI understand your concern with your quiz tonight. As per policy TECH-1, LMS accounts that lock after failed login attempts must be reset through the IT Helpdesk with your roll number and student ID, and the process takes up to 24 hours.\n\nPlease contact the IT Helpdesk directly with your roll number 24-CS-201 and student ID to request your password reset.\n\nStudent Helpdesk",
+    "confidence": 1.0,
+    "agent_notes": "Student's LMS account is locked due to failed login attempts. According to TECH-1, the IT Helpdesk handles resets within 24 hours upon receiving the roll number and student ID."
+  },
+  {
+    "email_id": "X011",
+    "category": "fee",
+    "priority": "low",
+    "escalate": false,
+    "escalation_reason": "",
+    "policy_refs": [
+      "FEE-4"
+    ],
+    "reply_draft": "Dear Amina, withdrawal before the semester starts is eligible for an 80% refund as per policy FEE-4. For the next step, please contact the Accounts Office to process your withdrawal and refund request.\n\nStudent Helpdesk",
+    "confidence": 1.0,
+    "agent_notes": "Student is asking about fee refund policy before semester start, which is covered under FEE-4."
+  },
+  {
+    "email_id": "X012",
+    "category": "hostel",
+    "priority": "high",
+    "escalate": true,
+    "escalation_reason": "Maintenance complaint unresolved after 48 hours, exceeding the policy limit.; stated wait ~6 days exceeds policy response time (~2 days)",
+    "policy_refs": [
+      "HOSTEL-1",
+      "HOSTEL-2",
+      "ESC-5"
+    ],
+    "reply_draft": "Dear Nabeel Umar,\n\nI apologize for the delay regarding your clogged drain in Block B Room 307. Since maintenance complaints must be resolved within 48 hours (HOSTEL-1) and yours has been pending for 6 days, I am immediately escalating this issue to the Hostel Warden as per HOSTEL-2 and ESC-5. \n\nNext step: The Hostel Warden's office has been notified and will coordinate with the maintenance team to address this urgently. Please contact the hostel office directly if you need further immediate assistance.\n\nStudent Helpdesk",
+    "confidence": 0.84,
+    "agent_notes": "The complaint is 6 days old, violating the 48-hour resolution rule. Escalated to the Hostel Warden per HOSTEL-2 and ESC-5. Validator: forced ESC-5"
+  },
+  {
+    "email_id": "X013",
+    "category": "academic",
+    "priority": "low",
+    "escalate": false,
+    "escalation_reason": "",
+    "policy_refs": [
+      "ACAD-1"
+    ],
+    "reply_draft": "Dear Hafsa,\n\nCourse add/drop is allowed in the first two weeks through the Department office. After that, it requires the Dean's approval (ACAD-1).\n\nPlease contact your Department office directly to process your request.\n\nStudent Helpdesk",
+    "confidence": 1.0,
+    "agent_notes": "Student wants to add/drop a course. According to ACAD-1, this is handled through the Department office."
+  },
+  {
+    "email_id": "X014",
+    "category": "fee",
+    "priority": "medium",
+    "escalate": false,
+    "escalation_reason": "",
+    "policy_refs": [
+      "FEE-3"
+    ],
+    "reply_draft": "Dear Sohail,\n\nYes, you can apply for installments. Per policy FEE-3, you must apply to the Accounts Office before the due date with a formal application and income proof. Up to 3 installments are allowed, and the Accounts Office will respond within 5 working days.\n\nNext step: Please submit your application and income proof to the Accounts Office before the due date.\n\nStudent Helpdesk",
+    "confidence": 1.0,
+    "agent_notes": "Student is asking about fee installment policy and required documents, which is directly covered under FEE-3."
+  },
+  {
+    "email_id": "X015",
+    "category": "academic",
+    "priority": "low",
+    "escalate": false,
+    "escalation_reason": "",
+    "policy_refs": [
+      "ACAD-4"
+    ],
+    "reply_draft": "Dear Iqra, to apply for re-evaluation, you must submit your application within 7 days of the result announcement through the Examination Department. The fee is Rs. 1000 per course, and the outcome will be provided within 15 working days (ACAD-4). Next step: Visit or contact the Examination Department with your application and fee.\n\nStudent Helpdesk",
+    "confidence": 1.0,
+    "agent_notes": "Student is asking about re-evaluation process and fee, which is directly covered by ACAD-4."
+  },
+  {
+    "email_id": "X016",
+    "category": "technical",
+    "priority": "low",
+    "escalate": false,
+    "escalation_reason": "",
+    "policy_refs": [
+      "TECH-2"
+    ],
+    "reply_draft": "Dear Junaid,\n\nThank you for reaching out. Per policy TECH-2, Wi-Fi problems should be reported to the IT Helpdesk with your building, floor, and room details. Since you have already provided Block G, floor 3, room 12, your issue has been noted. As a next step, please submit these details directly to the IT Helpdesk so they can assist you further.\n\nStudent Helpdesk",
+    "confidence": 1.0,
+    "agent_notes": "Student reported a localized Wi-Fi issue providing room details, correctly covered by TECH-2."
+  },
+  {
+    "email_id": "X017",
+    "category": "hostel",
+    "priority": "low",
+    "escalate": false,
+    "escalation_reason": "",
+    "policy_refs": [
+      "HOSTEL-5"
+    ],
+    "reply_draft": "Dear Saba, thank you for reaching out. Mess complaints should be submitted to the Mess Committee through the hostel office, and you can expect a response within 3 working days (HOSTEL-5). Next step: please submit your complaint directly to the hostel office so they can forward it to the Mess Committee. Student Helpdesk",
+    "confidence": 1.0,
+    "agent_notes": "Student is asking about the correct channel for mess complaints, which is directly covered by HOSTEL-5."
+  },
+  {
+    "email_id": "X018",
+    "category": "academic",
+    "priority": "low",
+    "escalate": false,
+    "escalation_reason": "",
+    "policy_refs": [
+      "ACAD-3"
+    ],
+    "reply_draft": "Dear Daniyal,\n\nTranscripts are processed by the Examination Department within 5 working days of application, as outlined in policy ACAD-3. Please apply through the Examination Department to start your request.\n\nStudent Helpdesk",
+    "confidence": 1.0,
+    "agent_notes": "Student is asking about official transcript application and processing time, which is directly covered by ACAD-3."
+  },
+  {
+    "email_id": "X019",
+    "category": "hostel",
+    "priority": "low",
+    "escalate": false,
+    "escalation_reason": "",
+    "policy_refs": [
+      "HOSTEL-4"
+    ],
+    "reply_draft": "Dear Waleed Asif,\n\nRoom changes are accepted through the Warden's office in the first two weeks of the semester (HOSTEL-4). Please submit your room change request directly to the Warden's office.\n\nStudent Helpdesk",
+    "confidence": 1.0,
+    "agent_notes": "Student is inquiring about room change within the first two weeks of the semester, covered by HOSTEL-4."
+  },
+  {
+    "email_id": "X020",
+    "category": "academic",
+    "priority": "medium",
+    "escalate": false,
+    "escalation_reason": "",
+    "policy_refs": [
+      "ACAD-2"
+    ],
+    "reply_draft": "Dear Eman,\n\nA 75% attendance is required to sit exams, but shortages can be condoned with a medical certificate or documented emergency submitted to your Department within 7 days of the absence ending, per policy ACAD-2. The Department Chairperson makes the final decision.\n\nNext step: Please submit your paperwork directly to your Department office.\n\nStudent Helpdesk",
+    "confidence": 1.0,
+    "agent_notes": "Student is inquiring about attendance condoning due to a documented emergency. Covered under ACAD-2."
+  }
+]

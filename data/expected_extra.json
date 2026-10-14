@@ -1,0 +1,122 @@
+[
+  {
+    "email_id": "X001",
+    "category": "hostel",
+    "escalate": false,
+    "policy_refs": ["HOSTEL-1"]
+  },
+  {
+    "email_id": "X002",
+    "category": "other",
+    "escalate": false,
+    "policy_refs": ["FEE-1", "HOSTEL-5", "ACAD-1"]
+  },
+  {
+    "email_id": "X003",
+    "category": "other",
+    "escalate": false,
+    "policy_refs": []
+  },
+  {
+    "email_id": "X004",
+    "category": "suspicious",
+    "escalate": true,
+    "policy_refs": ["ESC-6"]
+  },
+  {
+    "email_id": "X005",
+    "category": "harassment",
+    "escalate": true,
+    "policy_refs": ["ESC-2"]
+  },
+  {
+    "email_id": "X006",
+    "category": "wellbeing",
+    "escalate": true,
+    "policy_refs": ["ESC-3"]
+  },
+  {
+    "email_id": "X007",
+    "category": "hostel",
+    "escalate": true,
+    "policy_refs": ["HOSTEL-3", "ESC-1"]
+  },
+  {
+    "email_id": "X008",
+    "category": "fee",
+    "escalate": true,
+    "policy_refs": ["ESC-4"]
+  },
+  {
+    "email_id": "X009",
+    "category": "other",
+    "escalate": false,
+    "policy_refs": []
+  },
+  {
+    "email_id": "X010",
+    "category": "technical",
+    "escalate": false,
+    "policy_refs": ["TECH-1"]
+  },
+  {
+    "email_id": "X011",
+    "category": "fee",
+    "escalate": false,
+    "policy_refs": ["FEE-4"]
+  },
+  {
+    "email_id": "X012",
+    "category": "hostel",
+    "escalate": true,
+    "policy_refs": ["HOSTEL-1", "HOSTEL-2", "ESC-5"]
+  },
+  {
+    "email_id": "X013",
+    "category": "academic",
+    "escalate": false,
+    "policy_refs": ["ACAD-1"]
+  },
+  {
+    "email_id": "X014",
+    "category": "fee",
+    "escalate": false,
+    "policy_refs": ["FEE-3"]
+  },
+  {
+    "email_id": "X015",
+    "category": "academic",
+    "escalate": false,
+    "policy_refs": ["ACAD-4"]
+  },
+  {
+    "email_id": "X016",
+    "category": "technical",
+    "escalate": false,
+    "policy_refs": ["TECH-2"]
+  },
+  {
+    "email_id": "X017",
+    "category": "hostel",
+    "escalate": false,
+    "policy_refs": ["HOSTEL-5"]
+  },
+  {
+    "email_id": "X018",
+    "category": "academic",
+    "escalate": false,
+    "policy_refs": ["ACAD-3"]
+  },
+  {
+    "email_id": "X019",
+    "category": "hostel",
+    "escalate": false,
+    "policy_refs": ["HOSTEL-4"]
+  },
+  {
+    "email_id": "X020",
+    "category": "academic",
+    "escalate": false,
+    "policy_refs": ["ACAD-2"]
+  }
+]
