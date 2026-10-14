@@ -272,6 +272,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="Optional max number of emails to process (0 = all)",
     )
     parser.add_argument(
+        "--ids",
+        type=str,
+        default="",
+        help="Comma-separated email ids to process (e.g. E003,E010)",
+    )
+    parser.add_argument(
         "--log",
         type=Path,
         default=ROOT / "logs" / "agent.log",
@@ -311,9 +317,18 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     files = sorted(inbox.glob("*.json"))
+    id_filter = {
+        part.strip()
+        for part in str(args.ids or "").split(",")
+        if part.strip()
+    }
+    if id_filter:
+        files = [p for p in files if p.stem in id_filter]
+        logger.info("ids_filter=%s", ",".join(sorted(id_filter)))
     if args.limit and args.limit > 0:
         files = files[: args.limit]
     logger.info("inbox_scan files=%d", len(files))
+
 
     results: list[dict[str, Any]] = []
     for path in files:

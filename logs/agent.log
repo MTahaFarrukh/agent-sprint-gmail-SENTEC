@@ -112,3 +112,34 @@
 2026-10-14 10:05:39,245 INFO E020 validator_fixes=forced ESC-5
 2026-10-14 10:05:39,246 INFO E020 final category=academic priority=high escalate=True confidence=0.8
 2026-10-14 10:05:39,250 INFO outbox_written path=D:\Courses\Hackathons\AI GMAIL SPRINT SENTEC\outbox.json count=20
+2026-10-14 10:27:56,491 INFO run_start at=2026-10-14T05:27:56.491591+00:00 inbox=D:\Courses\Hackathons\AI GMAIL SPRINT SENTEC\data\inbox policy=D:\Courses\Hackathons\AI GMAIL SPRINT SENTEC\data\policy.md
+2026-10-14 10:27:56,495 INFO api_key_loaded source=env_or_dotenv len=53
+2026-10-14 10:27:56,497 INFO policy_loaded codes=22
+2026-10-14 10:27:56,502 INFO ids_filter=E003,E010,E013,E019,E020
+2026-10-14 10:27:56,504 INFO inbox_scan files=5
+2026-10-14 10:27:56,505 INFO E003.json loaded id=E003 subject='Refund request' body_len=206
+2026-10-14 10:27:56,505 INFO E003 llm_call=start
+2026-10-14 10:28:01,120 INFO E003 llm_call=ok category=fee escalate=False refs=['FEE-4']
+2026-10-14 10:28:01,120 INFO E003 validator_fixes=injected policy cite FEE-4
+2026-10-14 10:28:01,121 INFO E003 final category=fee priority=medium escalate=False confidence=0.8
+2026-10-14 10:28:01,121 INFO E010.json loaded id=E010 subject='LMS account locked' body_len=156
+2026-10-14 10:28:01,122 INFO E010 llm_call=start
+2026-10-14 10:28:05,210 INFO E010 llm_call=ok category=technical escalate=False refs=['TECH-1']
+2026-10-14 10:28:05,211 INFO E010 validator_fixes=none
+2026-10-14 10:28:05,211 INFO E010 final category=technical priority=medium escalate=False confidence=1.0
+2026-10-14 10:28:05,211 INFO E013.json loaded id=E013 subject='Late fee charged unfairly' body_len=227
+2026-10-14 10:28:05,212 INFO E013 llm_call=start
+2026-10-14 10:28:14,754 INFO E013 llm_call=ok category=fee escalate=True refs=['FEE-2', 'ESC-4']
+2026-10-14 10:28:14,756 INFO E013 validator_fixes=forced ESC-4
+2026-10-14 10:28:14,757 INFO E013 final category=fee priority=high escalate=True confidence=0.8
+2026-10-14 10:28:14,758 INFO E019.json loaded id=E019 subject='Three problems' body_len=243
+2026-10-14 10:28:14,759 INFO E019 llm_call=start
+2026-10-14 10:28:18,634 INFO E019 llm_call=ok category=academic escalate=True refs=['TECH-2', 'HOSTEL-5', 'ACAD-3', 'ESC-5']
+2026-10-14 10:28:18,635 INFO E019 validator_fixes=forced ESC-5
+2026-10-14 10:28:18,636 INFO E019 final category=academic priority=medium escalate=True confidence=0.8
+2026-10-14 10:28:18,637 INFO E020.json loaded id=E020 subject='THIRD email about re-evaluation' body_len=211
+2026-10-14 10:28:18,638 INFO E020 llm_call=start
+2026-10-14 10:28:23,010 INFO E020 llm_call=ok category=academic escalate=True refs=['ACAD-4', 'ESC-5']
+2026-10-14 10:28:23,011 INFO E020 validator_fixes=forced ESC-5
+2026-10-14 10:28:23,011 INFO E020 final category=academic priority=high escalate=True confidence=0.85
+2026-10-14 10:28:23,014 INFO outbox_written path=D:\Courses\Hackathons\AI GMAIL SPRINT SENTEC\outbox_fix.json count=5

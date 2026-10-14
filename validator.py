@@ -23,7 +23,7 @@ PRIORITIES = frozenset({"low", "medium", "high"})
 MAX_REPLY_WORDS = 150
 SIGNOFF = "Student Helpdesk"
 
-# (esc_code, compiled pattern) — first match wins for notes; all matches apply
+# Keyword patterns that force escalation (ESC-5 overdue is handled separately).
 ESC_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
     (
         "ESC-1",
@@ -71,37 +71,46 @@ ESC_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
             re.IGNORECASE,
         ),
     ),
-    (
-        "ESC-6",
-        re.compile(
-            r"("
-            r"ignore\s+(previous\s+)?instructions|ignore\s+your\s+instructions|"
-            r"system\s+prompt|reveal\s+(your\s+)?prompt|"
-            r"send\s+(me\s+)?(all\s+)?student\s+data|"
-            r"password|api\s*key|token\.json|"
-            r"you\s+are\s+now|act\s+as\s+dan|"
-            r"do\s+not\s+escalate|bypass\s+policy"
-            r")",
-            re.IGNORECASE,
-        ),
-    ),
 ]
 
-WAIT_DAYS_RE = re.compile(
-    r"(\d+)\s*(?:working\s+)?days?\s*(?:ago|se|wait|waiting|and\s+nobody|without)?",
+# ESC-6: assistant-targeted instructions, other students' data, or credential+phish combo.
+# Own forgotten/locked password is NOT suspicious.
+ESC6_ASSISTANT_RE = re.compile(
+    r"("
+    r"ignore\s+(previous|all|your)\s+instructions|"
+    r"ignore\s+all\s+previous|"
+    r"system\s+prompt|"
+    r"you\s+are\s+now|"
+    r"act\s+as\b|"
+    r"system\s+update|"
+    r"override\s+(your|the)\s+(instructions|rules|policy)|"
+    r"reveal\s+(your\s+)?(system\s+)?prompt"
+    r")",
     re.IGNORECASE,
 )
-WAIT_WEEKS_RE = re.compile(r"(\d+)\s*weeks?", re.IGNORECASE)
-WAIT_HOURS_RE = re.compile(r"(\d+)\s*hours?", re.IGNORECASE)
-THIRD_EMAIL_RE = re.compile(r"\bthird\s+email\b|\b3rd\s+email\b|\btisri\s+email\b", re.I)
-
-# Approximate SLA ceilings in days for overdue detection (ESC-5)
-SLA_DAYS_BY_PREFIX: dict[str, float] = {
-    "FEE": 5.0,
-    "HOSTEL": 2.0,  # 48 hours maintenance
-    "ACAD": 15.0,  # re-evaluation window outcome
-    "TECH": 1.0,  # 24 hours account reset
-}
+ESC6_OTHER_STUDENTS_RE = re.compile(
+    r"("
+    r"(send|reveal|share|give|list|export)\b.{0,40}\b("
+    r"other\s+students?|"
+    r"all\s+students?|"
+    r"student\s+(data|records?|list|emails?|database)|"
+    r"students['’]?\s+(data|records?|list|emails?)"
+    r")"
+    r")",
+    re.IGNORECASE | re.DOTALL,
+)
+ESC6_CREDENTIAL_PHISH_RE = re.compile(
+    r"("
+    r"(password|credentials?|otp|one[-\s]?time\s+password|login\s+details)"
+    r".{0,80}"
+    r"(https?://|www\.|\bclick\b|\bverify\b|\blink\b|\botp\b)"
+    r"|"
+    r"(https?://|www\.|\bclick\b|\bverify\b|\blink\b)"
+    r".{0,80}"
+    r"(password|credentials?|otp|one[-\s]?time\s+password|login\s+details)"
+    r")",
+    re.IGNORECASE | re.DOTALL,
+)
 
 COUNSELING_SNIPPET = (
     "Please contact the campus clinic or the Student Counseling Cell "
@@ -165,39 +174,34 @@ def _force_escalate(
     fixes.append(f"forced {esc_code}")
 
 
-def _extract_wait_days(text: str) -> float | None:
-    """Best-effort wait duration in days from the email body."""
-    if THIRD_EMAIL_RE.search(text):
-        return 20.0  # treat repeated chasing as overdue signal
-    weeks = WAIT_WEEKS_RE.findall(text)
-    if weeks:
-        return max(float(w) * 7.0 for w in weeks)
-    days = WAIT_DAYS_RE.findall(text)
-    if days:
-        return max(float(d) for d in days)
-    hours = WAIT_HOURS_RE.findall(text)
-    if hours:
-        return max(float(h) / 24.0 for h in hours)
-    return None
+def _normalize_for_match(text: str) -> str:
+    """Case-fold and collapse whitespace for evidence checks."""
+    return re.sub(r"\s+", " ", text).strip().lower()
 
 
-def _sla_for_refs(refs: list[str], category: str) -> float | None:
-    prefixes: set[str] = set()
-    for ref in refs:
-        prefix = ref.split("-")[0].upper()
-        if prefix in SLA_DAYS_BY_PREFIX:
-            prefixes.add(prefix)
-    cat_map = {
-        "fee": "FEE",
-        "hostel": "HOSTEL",
-        "academic": "ACAD",
-        "technical": "TECH",
-    }
-    if category in cat_map:
-        prefixes.add(cat_map[category])
-    if not prefixes:
-        return None
-    return max(SLA_DAYS_BY_PREFIX[p] for p in prefixes if p in SLA_DAYS_BY_PREFIX)
+def _evidence_in_body(evidence: str, body: str) -> bool:
+    """True if evidence is a verbatim substring of body (case/whitespace-insensitive)."""
+    ev = _normalize_for_match(evidence or "")
+    if not ev:
+        return False
+    return ev in _normalize_for_match(body or "")
+
+
+def _coerce_bool(value: Any) -> bool:
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        return value.strip().lower() in {"1", "true", "yes"}
+    return bool(value)
+
+
+def _esc6_triggered(blob: str) -> bool:
+    """Suspicious / prompt-injection / credential-phish — not own password lockouts."""
+    return bool(
+        ESC6_ASSISTANT_RE.search(blob)
+        or ESC6_OTHER_STUDENTS_RE.search(blob)
+        or ESC6_CREDENTIAL_PHISH_RE.search(blob)
+    )
 
 
 def _ensure_esc3_reply(reply: str) -> str:
@@ -264,6 +268,11 @@ def validate_result(
         out.get("email_id") or email.get("id") or email.get("email_id") or "UNKNOWN"
     )
 
+    overdue = _coerce_bool(out.get("overdue", False))
+    overdue_evidence = str(out.get("overdue_evidence") or "")
+    out["overdue"] = overdue
+    out["overdue_evidence"] = overdue_evidence
+
     # --- policy_refs: drop unknowns ---
     raw_refs = out.get("policy_refs") or []
     if not isinstance(raw_refs, list):
@@ -280,7 +289,6 @@ def validate_result(
     out["policy_refs"] = cleaned_refs
 
     if category != "other" and not cleaned_refs:
-        # Prefer a category-prefix code if any exist
         prefix_map = {
             "fee": "FEE",
             "hostel": "HOSTEL",
@@ -300,29 +308,33 @@ def validate_result(
             out["policy_refs"] = cleaned_refs
             fixes.append(f"added missing ref {fallback_code}")
         else:
-            _force_escalate(
-                out,
-                esc_code="ESC-5",
-                reason="no valid policy_refs for non-other category",
-                fixes=fixes,
+            out["escalate"] = True
+            out["escalation_reason"] = _combine_reasons(
+                out["escalation_reason"],
+                "no valid policy_refs for non-other category",
             )
+            fixes.append("escalated: missing policy_refs")
 
     # Reply must cite at least one valid code when category is not other
     reply = out["reply_draft"]
     if category != "other" and cleaned_refs:
-        cited = any(code in reply for code in cleaned_refs)
+        non_esc_refs = [c for c in cleaned_refs if not c.startswith("ESC-")]
+        cite_pool = non_esc_refs or cleaned_refs
+        cited = any(code in reply for code in cite_pool)
         if not cited:
-            reply = f"{reply.rstrip()} (Policy {cleaned_refs[0]})."
-            fixes.append(f"injected policy cite {cleaned_refs[0]}")
+            reply = f"{reply.rstrip()} (Policy {cite_pool[0]})."
+            fixes.append(f"injected policy cite {cite_pool[0]}")
             out["reply_draft"] = reply
 
-    # --- keyword / Roman Urdu escalation patterns ---
+    body = str(email.get("body") or "")
     blob = " ".join(
         [
             str(email.get("subject") or ""),
-            str(email.get("body") or ""),
+            body,
         ]
     )
+
+    # --- keyword / Roman Urdu escalation patterns (not ESC-5/ESC-6) ---
     for esc_code, pattern in ESC_PATTERNS:
         if pattern.search(blob):
             _force_escalate(
@@ -332,30 +344,34 @@ def validate_result(
                 fixes=fixes,
             )
 
-    # --- overdue vs policy response time ---
-    wait_days = _extract_wait_days(blob)
-    if wait_days is not None:
-        sla = _sla_for_refs(list(out.get("policy_refs") or []), category)
-        if sla is not None and wait_days > sla:
+    # --- ESC-6 (tightened; no bare "password") ---
+    if _esc6_triggered(blob):
+        _force_escalate(
+            out,
+            esc_code="ESC-6",
+            reason="keyword trigger for ESC-6",
+            fixes=fixes,
+        )
+
+    # --- ESC-5 overdue: only if LLM overdue + evidence is verbatim in body ---
+    if overdue:
+        if _evidence_in_body(overdue_evidence, body):
             _force_escalate(
                 out,
                 esc_code="ESC-5",
-                reason=(
-                    f"stated wait ~{wait_days:.0f} days exceeds policy response "
-                    f"time (~{sla:.0f} days)"
-                ),
+                reason=f"overdue wait evidenced by: {overdue_evidence.strip()[:120]}",
                 fixes=fixes,
             )
+        else:
+            out["overdue"] = False
+            fixes.append("ignored overdue: evidence not verbatim in body")
 
     # ESC-3 reply content requirements
-    if "ESC-3" in (out.get("policy_refs") or []) or out.get("category") == "wellbeing":
-        if any("ESC-3" in f or "ESC-3" in str(out.get("escalation_reason")) for f in fixes) or (
-            "ESC-3" in (out.get("policy_refs") or [])
-        ):
-            before = out["reply_draft"]
-            out["reply_draft"] = _ensure_esc3_reply(out["reply_draft"])
-            if out["reply_draft"] != before:
-                fixes.append("ensured ESC-3 counseling wording")
+    if "ESC-3" in (out.get("policy_refs") or []):
+        before = out["reply_draft"]
+        out["reply_draft"] = _ensure_esc3_reply(out["reply_draft"])
+        if out["reply_draft"] != before:
+            fixes.append("ensured ESC-3 counseling wording")
 
     # --- reply length ---
     reply = str(out.get("reply_draft") or "")

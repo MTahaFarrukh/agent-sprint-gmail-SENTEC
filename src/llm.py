@@ -21,7 +21,7 @@ from src.config import (
     OPENAI_API_KEY,
 )
 
-LLM_TIMEOUT_SECONDS: int = 30
+LLM_TIMEOUT_SECONDS: int = 60
 MAX_RETRIES: int = 3
 MAX_429_WAIT_SECONDS: float = 120.0
 FENCE_RE = re.compile(r"^```(?:json)?\s*|\s*```$", re.IGNORECASE | re.MULTILINE)
