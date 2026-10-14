@@ -693,17 +693,86 @@ def load_trace() -> tuple[dict[str, list[dict[str, str]]], str]:
 # --------------------------------------------------------------------------
 
 
+def _secret_api_key() -> str:
+    """Read API key from Streamlit secrets (Cloud) if present."""
+    try:
+        secrets = st.secrets  # type: ignore[attr-defined]
+    except Exception:  # noqa: BLE001
+        return ""
+    for name in ("GEMINI_API_KEY", "GOOGLE_API_KEY"):
+        try:
+            value = secrets.get(name, "")  # type: ignore[union-attr]
+        except Exception:  # noqa: BLE001
+            try:
+                value = secrets[name]  # type: ignore[index]
+            except Exception:  # noqa: BLE001
+                value = ""
+        key = str(value or "").strip().strip('"').strip("'")
+        if key:
+            return key
+    return ""
+
+
+def resolve_api_key() -> tuple[str, str]:
+    """Return (key, source_label). Cloud secrets first, then env / .env."""
+    key = _secret_api_key()
+    if key:
+        return key, "Streamlit secrets"
+    key = (
+        os.environ.get("GEMINI_API_KEY")
+        or os.environ.get("GOOGLE_API_KEY")
+        or ""
+    ).strip().strip('"').strip("'")
+    if key:
+        return key, "environment"
+    # Last resort: project .env (local only; not on Cloud unless committed — don't)
+    env_path = ROOT / ".env"
+    if env_path.is_file():
+        for line in env_path.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            name, _, value = line.partition("=")
+            if name.strip() in {"GEMINI_API_KEY", "GOOGLE_API_KEY"}:
+                key = value.strip().strip('"').strip("'")
+                if key:
+                    return key, ".env file"
+    return "", ""
+
+
 def _agent_env() -> dict[str, str]:
+    """Env for agent.py subprocess — inject Cloud secrets as GEMINI_API_KEY."""
     env = dict(os.environ)
     env["PYTHONUNBUFFERED"] = "1"
     env["PYTHONIOENCODING"] = "utf-8"
+    key, _source = resolve_api_key()
+    if key:
+        env["GEMINI_API_KEY"] = key
     return env
 
 
 def run_agent_live(extra_args: list[str], tail_box: Any) -> tuple[int, list[str]]:
+    key, source = resolve_api_key()
+    if not key:
+        msg = (
+            "No API key found. On Streamlit Cloud: App settings → Secrets → add\n"
+            'GEMINI_API_KEY = "your_key"\n'
+            "Then reboot the app. Locally: set GEMINI_API_KEY or use a .env file."
+        )
+        tail_box.markdown(
+            f'<div class="logtail">{esc(msg)}</div>',
+            unsafe_allow_html=True,
+        )
+        return 1, [msg]
+
     cmd = [sys.executable, "-u", str(ROOT / "agent.py"), *extra_args]
     tail: deque[str] = deque(maxlen=LOG_TAIL_LINES)
-    all_lines: list[str] = []
+    all_lines: list[str] = [f"[dashboard] Using API key from {source}"]
+    tail.append(all_lines[0])
+    tail_box.markdown(
+        f'<div class="logtail">{esc(chr(10).join(tail))}</div>',
+        unsafe_allow_html=True,
+    )
     try:
         proc = subprocess.Popen(
             cmd,
@@ -726,7 +795,18 @@ def run_agent_live(extra_args: list[str], tail_box: Any) -> tuple[int, list[str]
             f'<div class="logtail">{esc(chr(10).join(tail))}</div>',
             unsafe_allow_html=True,
         )
-    return proc.wait(), all_lines
+    code = proc.wait()
+    if code != 0 and not any("No API key" in ln or "api_key" in ln.lower() for ln in all_lines):
+        all_lines.append(
+            f"[dashboard] Agent exited with code {code}. "
+            "If this is Cloud, confirm GEMINI_API_KEY is in Streamlit Secrets."
+        )
+        tail.append(all_lines[-1])
+        tail_box.markdown(
+            f'<div class="logtail">{esc(chr(10).join(tail))}</div>',
+            unsafe_allow_html=True,
+        )
+    return code, all_lines
 
 
 def merge_into_outbox(new_rows: list[dict[str, Any]]) -> None:
@@ -847,6 +927,22 @@ def render_sidebar(inbox: dict[str, dict[str, Any]], rows: list[dict[str, Any]])
             f'<div class="side-hint">Control room · drafts only · nothing is sent</div>',
             unsafe_allow_html=True,
         )
+
+        key, source = resolve_api_key()
+        if key:
+            st.markdown(
+                f'<div class="side-hint">API key: loaded ({esc(source)})</div>',
+                unsafe_allow_html=True,
+            )
+        else:
+            st.markdown(
+                '<div class="demo-box"><div class="side-hint" style="margin:0;color:#FECACA !important">'
+                "<b>No API key</b> — on Streamlit Cloud open "
+                "<b>App settings → Secrets</b> and add:<br><code>GEMINI_API_KEY = \"your_key\"</code>"
+                "<br>Then reboot the app. Without this, Run agent exits with code 1."
+                "</div></div>",
+                unsafe_allow_html=True,
+            )
 
         if st.button("Run agent · full inbox", type="primary", key="run_all"):
             st.session_state["pending"] = {"mode": "all", "ids": []}
