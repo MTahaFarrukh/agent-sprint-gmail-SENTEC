@@ -29,3 +29,7 @@ build/
 *.swp
 .DS_Store
 Thumbs.db
+
+logs/
+outbox*.json
+*.zip
