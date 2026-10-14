@@ -69,6 +69,44 @@ CSS = f"""
   --amber: {AMBER}; --text: {TEXT}; --muted: {MUTED};
 }}
 
+/* Premium motion — presence, not noise */
+@keyframes th-fade-up {{
+  from {{ opacity: 0; transform: translateY(14px); }}
+  to {{ opacity: 1; transform: translateY(0); }}
+}}
+@keyframes th-fade-in {{
+  from {{ opacity: 0; }}
+  to {{ opacity: 1; }}
+}}
+@keyframes th-hero-glow {{
+  0%, 100% {{ opacity: 0.55; transform: scale(1); }}
+  50% {{ opacity: 0.9; transform: scale(1.06); }}
+}}
+@keyframes th-pulse-dot {{
+  0%, 100% {{ box-shadow: 0 0 0 0 rgba(52,211,153,0.55); }}
+  50% {{ box-shadow: 0 0 0 7px rgba(52,211,153,0); }}
+}}
+@keyframes th-bar-grow {{
+  from {{ transform: scaleX(0); }}
+  to {{ transform: scaleX(1); }}
+}}
+@keyframes th-shimmer {{
+  0% {{ background-position: 0% 50%; }}
+  100% {{ background-position: 100% 50%; }}
+}}
+@keyframes th-timeline-in {{
+  from {{ opacity: 0; transform: translateX(-8px); }}
+  to {{ opacity: 1; transform: translateX(0); }}
+}}
+
+@media (prefers-reduced-motion: reduce) {{
+  *, *::before, *::after {{
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }}
+}}
+
 html, body, .stApp, [data-testid="stAppViewContainer"] {{
   background:
     radial-gradient(900px 420px at 8% -10%, rgba(15,118,110,0.18), transparent 55%),
@@ -129,13 +167,23 @@ header[data-testid="stHeader"] {{ background: transparent !important; }}
 .stButton > button, [data-testid="stFormSubmitButton"] > button {{
   width: 100%; border-radius: 12px; border: 1px solid rgba(255,255,255,0.14);
   background: rgba(255,255,255,0.06); color: #E8F1F4; font-weight: 600;
-  font-family: {FONT}; transition: transform .12s ease, background .12s ease;
+  font-family: {FONT};
+  transition: transform .22s cubic-bezier(.22,1,.36,1), background .22s ease,
+              box-shadow .22s ease, border-color .22s ease, filter .22s ease;
 }}
-.stButton > button:hover {{ background: rgba(255,255,255,0.12); border-color: var(--sea); transform: translateY(-1px); }}
+.stButton > button:hover {{
+  background: rgba(255,255,255,0.12); border-color: var(--sea);
+  transform: translateY(-2px); box-shadow: 0 10px 22px rgba(0,0,0,0.18);
+}}
+.stButton > button:active {{ transform: translateY(0); }}
 .stButton > button[kind="primary"], [data-testid="stFormSubmitButton"] > button[kind="primaryFormSubmit"] {{
   background: linear-gradient(135deg, #0F766E, #14B8A6); border: none; color: #fff !important;
+  background-size: 160% 160%;
 }}
-.stButton > button[kind="primary"]:hover {{ filter: brightness(1.06); color: #fff !important; }}
+.stButton > button[kind="primary"]:hover {{
+  filter: brightness(1.08); color: #fff !important;
+  box-shadow: 0 12px 28px rgba(15,118,110,0.35);
+}}
 [data-testid="stForm"] {{
   border: 1px solid rgba(255,255,255,0.1); border-radius: 16px;
   background: rgba(0,0,0,0.18); padding: .4rem;
@@ -153,6 +201,7 @@ div[data-testid="stTabs"] button[aria-selected="true"] {{
 .brand {{
   display: grid; grid-template-columns: 1.4fr 1fr; gap: 1.2rem; align-items: stretch;
   margin-bottom: 1.1rem;
+  animation: th-fade-up .7s cubic-bezier(.22,1,.36,1) both;
 }}
 @media (max-width: 900px) {{ .brand {{ grid-template-columns: 1fr; }} }}
 .brand-hero {{
@@ -162,25 +211,41 @@ div[data-testid="stTabs"] button[aria-selected="true"] {{
     radial-gradient(600px 240px at 90% 10%, rgba(20,184,166,0.35), transparent 60%);
   color: #F4FAFB; min-height: 168px;
   box-shadow: 0 18px 40px rgba(11,31,42,0.18);
+  transition: transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s ease;
+}}
+.brand-hero:hover {{
+  transform: translateY(-2px);
+  box-shadow: 0 24px 48px rgba(11,31,42,0.24);
 }}
 .brand-hero::after {{
   content:""; position:absolute; inset:auto -20% -40% 40%; height:160px;
   background: radial-gradient(circle, rgba(225,29,72,0.25), transparent 70%);
   pointer-events:none;
+  animation: th-hero-glow 5.5s ease-in-out infinite;
+}}
+.brand-hero::before {{
+  content:""; position:absolute; inset:0; pointer-events:none; opacity:0.35;
+  background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,0.08) 48%, transparent 62%);
+  background-size: 220% 100%;
+  animation: th-shimmer 7s linear infinite;
 }}
 .brand-kicker {{
   font-size: .72rem; letter-spacing: .18em; text-transform: uppercase;
   color: #7DD3C7; font-weight: 700; margin-bottom: .55rem;
+  animation: th-fade-in .8s ease both .15s;
 }}
 .brand-name {{
   font-family: {DISPLAY}; font-size: clamp(1.8rem, 3vw, 2.45rem); font-weight: 700;
   letter-spacing: -0.04em; line-height: 1.05; margin: 0;
+  animation: th-fade-up .75s cubic-bezier(.22,1,.36,1) both .05s;
 }}
 .brand-tag {{
   margin-top: .55rem; max-width: 34rem; color: #B7CBD4; font-size: .95rem; line-height: 1.45;
+  animation: th-fade-up .75s cubic-bezier(.22,1,.36,1) both .12s;
 }}
 .brand-meta {{
   margin-top: 1rem; display:flex; flex-wrap:wrap; gap: .5rem;
+  animation: th-fade-up .75s cubic-bezier(.22,1,.36,1) both .2s;
 }}
 .brand-hero .pill,
 .pill {{
@@ -189,6 +254,12 @@ div[data-testid="stTabs"] button[aria-selected="true"] {{
   border:1px solid rgba(125,211,199,0.45) !important;
   background: rgba(15,118,110,0.28) !important;
   color: #F4FAFB !important;
+  transition: transform .2s ease, background .2s ease, border-color .2s ease;
+}}
+.brand-hero .pill:hover {{
+  transform: translateY(-1px);
+  background: rgba(20,184,166,0.38) !important;
+  border-color: rgba(125,211,199,0.7) !important;
 }}
 .brand-hero .pill,
 .brand-hero .pill * {{
@@ -197,11 +268,18 @@ div[data-testid="stTabs"] button[aria-selected="true"] {{
 .pill .dot {{
   width:7px; height:7px; border-radius:50%; flex-shrink:0;
   background:#34D399 !important; box-shadow:0 0 10px #34D399;
+  animation: th-pulse-dot 2.2s ease-out infinite;
 }}
 .brand-side {{
   border-radius: 24px; padding: 1.25rem 1.35rem;
   background: rgba(255,255,255,0.88); border: 1px solid #C9DCE3;
   backdrop-filter: blur(8px);
+  animation: th-fade-up .75s cubic-bezier(.22,1,.36,1) both .18s;
+  transition: transform .3s ease, box-shadow .3s ease;
+}}
+.brand-side:hover {{
+  transform: translateY(-2px);
+  box-shadow: 0 16px 36px rgba(11,31,42,0.08);
 }}
 .brand-side h3 {{
   font-family: {DISPLAY}; font-size: 1rem; margin: 0 0 .55rem; letter-spacing: -0.02em;
@@ -214,7 +292,15 @@ div[data-testid="stTabs"] button[aria-selected="true"] {{
 .brand-side .step {{
   display:flex; gap:.55rem; align-items:flex-start; font-size:.82rem;
   color: #334155 !important;
+  animation: th-timeline-in .45s ease both;
+  transition: transform .2s ease, background .2s ease;
+  padding: .25rem .35rem; border-radius: 8px;
 }}
+.brand-side .step:nth-child(1) {{ animation-delay: .25s; }}
+.brand-side .step:nth-child(2) {{ animation-delay: .35s; }}
+.brand-side .step:nth-child(3) {{ animation-delay: .45s; }}
+.brand-side .step:nth-child(4) {{ animation-delay: .55s; }}
+.brand-side .step:hover {{ background: rgba(15,118,110,0.06); transform: translateX(3px); }}
 .brand-side .step span {{ color: #334155 !important; }}
 .brand-side .step b {{
   font-size:.68rem; letter-spacing:.08em; color: #0F766E !important; min-width: 4.6rem;
@@ -223,6 +309,18 @@ div[data-testid="stTabs"] button[aria-selected="true"] {{
 .kpi {{
   background: rgba(255,255,255,0.78); border:1px solid #C9DCE3; border-radius:18px;
   padding:1rem 1.1rem; height:100%; box-shadow: 0 8px 24px rgba(11,31,42,0.04);
+  animation: th-fade-up .65s cubic-bezier(.22,1,.36,1) both;
+  transition: transform .28s cubic-bezier(.22,1,.36,1), box-shadow .28s ease, border-color .28s ease;
+}}
+div[data-testid="stHorizontalBlock"] > div:nth-child(1) .kpi {{ animation-delay: .05s; }}
+div[data-testid="stHorizontalBlock"] > div:nth-child(2) .kpi {{ animation-delay: .1s; }}
+div[data-testid="stHorizontalBlock"] > div:nth-child(3) .kpi {{ animation-delay: .15s; }}
+div[data-testid="stHorizontalBlock"] > div:nth-child(4) .kpi {{ animation-delay: .2s; }}
+div[data-testid="stHorizontalBlock"] > div:nth-child(5) .kpi {{ animation-delay: .25s; }}
+.kpi:hover {{
+  transform: translateY(-4px);
+  box-shadow: 0 18px 36px rgba(11,31,42,0.1);
+  border-color: rgba(15,118,110,0.35);
 }}
 .kpi .lbl {{ color: var(--muted); font-size:.72rem; text-transform:uppercase; letter-spacing:.1em; font-weight:700; }}
 .kpi .val {{ font-family: {DISPLAY}; font-size:1.85rem; font-weight:700; margin-top:.3rem; letter-spacing:-0.03em; }}
@@ -234,6 +332,13 @@ div[data-testid="stTabs"] button[aria-selected="true"] {{
 .card {{
   background: rgba(255,255,255,0.82); border:1px solid #C9DCE3; border-radius:18px;
   padding:1rem 1.15rem; margin-bottom: .85rem; box-shadow: 0 8px 24px rgba(11,31,42,0.04);
+  animation: th-fade-up .6s cubic-bezier(.22,1,.36,1) both;
+  transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease;
+}}
+.card:hover {{
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px rgba(11,31,42,0.08);
+  border-color: rgba(15,118,110,0.28);
 }}
 .card h4 {{
   margin:0 0 .55rem 0; font-size:.72rem; color:var(--muted); text-transform:uppercase;
@@ -242,6 +347,12 @@ div[data-testid="stTabs"] button[aria-selected="true"] {{
 [class*="st-key-chartcard_"] {{
   background: rgba(255,255,255,0.82); border:1px solid #C9DCE3; border-radius:18px;
   padding:1rem 1.1rem .35rem; box-shadow: 0 8px 24px rgba(11,31,42,0.04);
+  animation: th-fade-up .65s cubic-bezier(.22,1,.36,1) both;
+  transition: transform .28s ease, box-shadow .28s ease;
+}}
+[class*="st-key-chartcard_"]:hover {{
+  transform: translateY(-3px);
+  box-shadow: 0 16px 34px rgba(11,31,42,0.09);
 }}
 .card-title {{
   font-size:.72rem; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; font-weight:700;
@@ -249,8 +360,13 @@ div[data-testid="stTabs"] button[aria-selected="true"] {{
 .section {{
   font-family: {DISPLAY}; font-size:1.05rem; font-weight:650; margin: 1.35rem 0 .65rem;
   color: var(--text); display:flex; align-items:center; gap:.55rem; letter-spacing:-0.02em;
+  animation: th-fade-in .5s ease both;
 }}
-.section .bar {{ width:4px; height:18px; border-radius:4px; background: var(--sea); display:inline-block; }}
+.section .bar {{
+  width:4px; height:18px; border-radius:4px; background: var(--sea); display:inline-block;
+  transform-origin: center bottom;
+  animation: th-bar-grow .55s cubic-bezier(.22,1,.36,1) both;
+}}
 .section.danger .bar {{ background: var(--coral); }}
 .muted {{ color: var(--muted); font-size:.85rem; }}
 
@@ -258,7 +374,9 @@ div[data-testid="stTabs"] button[aria-selected="true"] {{
   display:inline-block; padding:.16rem .5rem; border-radius:999px; font-size:.72rem; font-weight:600;
   background: #EAF4F6; border:1px solid #C9DCE3; color: #0B1F2A !important;
   margin: 0 .22rem .18rem 0; white-space:nowrap;
+  transition: transform .18s ease, box-shadow .18s ease;
 }}
+.bdg:hover {{ transform: translateY(-1px); box-shadow: 0 4px 10px rgba(11,31,42,0.08); }}
 .bdg.accent {{ background: var(--sea-soft); border-color: transparent; color: #0F766E !important; }}
 .bdg.danger {{ background: var(--coral-soft); border-color: transparent; color: #BE123C !important; }}
 .bdg.code {{ font-family: ui-monospace, 'Cascadia Code', Consolas, monospace; color: #0B1F2A !important; }}
@@ -266,6 +384,13 @@ div[data-testid="stTabs"] button[aria-selected="true"] {{
 .esc {{
   background: #fff; border:1px solid #C9DCE3; border-left: 4px solid var(--coral);
   border-radius: 14px; padding: .75rem 1rem; margin-bottom:.55rem;
+  animation: th-fade-up .5s cubic-bezier(.22,1,.36,1) both;
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}}
+.esc:hover {{
+  transform: translateX(4px);
+  box-shadow: 0 12px 28px rgba(225,29,72,0.08);
+  border-color: rgba(225,29,72,0.35);
 }}
 .esc .top {{ display:flex; justify-content:space-between; gap:.6rem; flex-wrap:wrap; align-items:center; }}
 .esc .id {{ font-weight:700; color: #BE123C !important; margin-right:.45rem; }}
@@ -276,6 +401,7 @@ div[data-testid="stTabs"] button[aria-selected="true"] {{
 .tbl-wrap {{
   max-height: 460px; overflow:auto; border:1px solid #C9DCE3; border-radius:16px;
   background: rgba(255,255,255,0.95);
+  animation: th-fade-up .55s cubic-bezier(.22,1,.36,1) both;
 }}
 table.tbl {{ width:100%; border-collapse: collapse; font-size:.86rem; }}
 table.tbl th {{
@@ -286,13 +412,18 @@ table.tbl th {{
 table.tbl td {{
   padding:.65rem .8rem; border-top:1px solid #D7E5EA; vertical-align: top;
   color: #0B1F2A !important;
+  transition: background .2s ease;
 }}
 table.tbl td b {{ color: #0B1F2A !important; font-family: {DISPLAY}; }}
 table.tbl .muted {{ color: #5B6B76 !important; font-size: .78rem; }}
-table.tbl tr:hover td {{ background: rgba(15,118,110,0.05); }}
+table.tbl tr:hover td {{ background: rgba(15,118,110,0.07); }}
 .conf {{ display:flex; align-items:center; gap:.45rem; color: #334155 !important; }}
 .conf .track {{ width:58px; height:6px; background: #D7E5EA; border-radius:6px; overflow:hidden; }}
-.conf .fill {{ height:100%; background: var(--sea); border-radius:6px; }}
+.conf .fill {{
+  height:100%; background: var(--sea); border-radius:6px;
+  transform-origin: left center;
+  animation: th-bar-grow .7s cubic-bezier(.22,1,.36,1) both;
+}}
 .conf.low .fill {{ background: var(--coral); }}
 
 .card {{ color: #0B1F2A; }}
@@ -319,10 +450,24 @@ table.tbl tr:hover td {{ background: rgba(15,118,110,0.05); }}
 
 .tl {{ position:relative; padding-left: 1.35rem; }}
 .tl::before {{ content:""; position:absolute; left:.42rem; top:.3rem; bottom:.3rem; width:2px; background: #C9DCE3; }}
-.tl .st {{ position:relative; margin-bottom: .75rem; }}
+.tl .st {{
+  position:relative; margin-bottom: .75rem;
+  animation: th-timeline-in .4s ease both;
+}}
+.tl .st:nth-child(1) {{ animation-delay: .05s; }}
+.tl .st:nth-child(2) {{ animation-delay: .1s; }}
+.tl .st:nth-child(3) {{ animation-delay: .15s; }}
+.tl .st:nth-child(4) {{ animation-delay: .2s; }}
+.tl .st:nth-child(5) {{ animation-delay: .25s; }}
+.tl .st:nth-child(n+6) {{ animation-delay: .3s; }}
 .tl .st::before {{
   content:""; position:absolute; left:-1.15rem; top:.35rem; width:10px; height:10px; border-radius:50%;
   background: #fff; border:2px solid var(--sea);
+  transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+}}
+.tl .st:hover::before {{
+  transform: scale(1.25);
+  box-shadow: 0 0 0 4px rgba(15,118,110,0.15);
 }}
 .tl .st.DECISION::before {{ background: var(--sea); }}
 .tl .kind {{ font-size:.66rem; font-weight:700; letter-spacing:.1em; color: #0F766E !important; }}
@@ -333,10 +478,12 @@ table.tbl tr:hover td {{ background: rgba(15,118,110,0.05); }}
   background:#0B1F2A; border:1px solid #1F3A4A; border-radius:14px; padding:.85rem 1rem;
   font-family: ui-monospace, 'Cascadia Code', Consolas, monospace; font-size:.74rem; color:#B7CBD4;
   white-space: pre-wrap; max-height: 380px; overflow:auto;
+  animation: th-fade-in .35s ease both;
 }}
 .flash {{
   border-radius:14px; padding:.75rem 1rem; margin: .7rem 0; font-size:.88rem;
   border:1px solid rgba(15,118,110,.35); background: var(--sea-soft); color: var(--text);
+  animation: th-fade-up .45s cubic-bezier(.22,1,.36,1) both;
 }}
 .flash.err {{ border-color: rgba(225,29,72,.35); background: var(--coral-soft); }}
 .side-title {{
