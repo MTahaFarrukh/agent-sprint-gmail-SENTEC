@@ -356,3 +356,61 @@
 2026-10-14 10:42:27,097 INFO X020 validator_fixes=none
 2026-10-14 10:42:27,098 INFO X020 final category=academic priority=medium escalate=False confidence=1.0
 2026-10-14 10:42:27,103 INFO outbox_written path=D:\Courses\Hackathons\AI GMAIL SPRINT SENTEC\outbox_extra.json count=20
+2026-10-14 11:02:42,440 INFO run_start at=2026-10-14T06:02:42.440892+00:00 inbox=D:\Courses\Hackathons\AI GMAIL SPRINT SENTEC\data\inbox policy=D:\Courses\Hackathons\AI GMAIL SPRINT SENTEC\data\policy.md
+2026-10-14 11:02:42,441 INFO api_key_loaded source=env_or_dotenv len=53
+2026-10-14 11:02:42,442 INFO policy_loaded codes=22
+2026-10-14 11:02:42,443 INFO ids_filter=E005,E010,E013,E020
+2026-10-14 11:02:42,443 INFO inbox_scan files=4
+2026-10-14 11:02:42,443 INFO E005.json loaded id=E005 subject='URGENT: sparking wire in Block A corrido' body_len=248
+2026-10-14 11:02:42,484 INFO E005 final=safe_failure error=UnicodeEncodeError: 'charmap' codec can't encode character '\u2192' in position 20: character maps to <undefined>
+2026-10-14 11:02:42,484 INFO E010.json loaded id=E010 subject='LMS account locked' body_len=156
+2026-10-14 11:02:42,488 INFO E010 final=safe_failure error=UnicodeEncodeError: 'charmap' codec can't encode character '\u2192' in position 20: character maps to <undefined>
+2026-10-14 11:02:42,488 INFO E013.json loaded id=E013 subject='Late fee charged unfairly' body_len=227
+2026-10-14 11:02:42,492 INFO E013 final=safe_failure error=UnicodeEncodeError: 'charmap' codec can't encode character '\u2192' in position 20: character maps to <undefined>
+2026-10-14 11:02:42,493 INFO E020.json loaded id=E020 subject='THIRD email about re-evaluation' body_len=211
+2026-10-14 11:02:42,496 INFO E020 final=safe_failure error=UnicodeEncodeError: 'charmap' codec can't encode character '\u2192' in position 20: character maps to <undefined>
+2026-10-14 11:02:42,502 INFO outbox_written path=D:\Courses\Hackathons\AI GMAIL SPRINT SENTEC\outbox_trace.json count=4
+2026-10-14 11:02:53,269 INFO run_start at=2026-10-14T06:02:53.269159+00:00 inbox=D:\Courses\Hackathons\AI GMAIL SPRINT SENTEC\data\inbox policy=D:\Courses\Hackathons\AI GMAIL SPRINT SENTEC\data\policy.md
+2026-10-14 11:02:53,269 INFO api_key_loaded source=env_or_dotenv len=53
+2026-10-14 11:02:53,270 INFO policy_loaded codes=22
+2026-10-14 11:02:53,272 INFO ids_filter=E005,E010,E013,E020
+2026-10-14 11:02:53,273 INFO inbox_scan files=4
+2026-10-14 11:02:53,273 INFO E005.json loaded id=E005 subject='URGENT: sparking wire in Block A corrido' body_len=248
+2026-10-14 11:02:56,054 INFO E005 llm_call=ok category=hostel escalate=True refs=['HOSTEL-3', 'ESC-1']
+2026-10-14 11:02:56,059 INFO E005 validator_fixes=confirmed ESC-1
+2026-10-14 11:02:56,063 INFO E005 final category=hostel priority=high escalate=True confidence=1.0
+2026-10-14 11:02:56,064 INFO E010.json loaded id=E010 subject='LMS account locked' body_len=156
+2026-10-14 11:02:59,680 INFO E010 llm_call=ok category=technical escalate=False refs=['TECH-1']
+2026-10-14 11:02:59,682 INFO E010 validator_fixes=none
+2026-10-14 11:02:59,684 INFO E010 final category=technical priority=medium escalate=False confidence=1.0
+2026-10-14 11:02:59,684 INFO E013.json loaded id=E013 subject='Late fee charged unfairly' body_len=227
+2026-10-14 11:03:04,946 INFO E013 llm_call=ok category=fee escalate=True refs=['FEE-2', 'ESC-4']
+2026-10-14 11:03:04,953 INFO E013 validator_fixes=confirmed ESC-4
+2026-10-14 11:03:08,225 INFO E013 final category=fee priority=high escalate=True confidence=0.95
+2026-10-14 11:03:08,225 INFO E020.json loaded id=E020 subject='THIRD email about re-evaluation' body_len=211
+2026-10-14 11:03:13,549 INFO E020 llm_call=ok category=academic escalate=True refs=['ACAD-4', 'ESC-5']
+2026-10-14 11:03:13,555 INFO E020 validator_fixes=confirmed ESC-5
+2026-10-14 11:03:13,559 INFO E020 final category=academic priority=high escalate=True confidence=0.95
+2026-10-14 11:03:13,562 INFO outbox_written path=D:\Courses\Hackathons\AI GMAIL SPRINT SENTEC\outbox_trace.json count=4
+2026-10-14 11:04:38,855 INFO run_start at=2026-10-14T06:04:38.855446+00:00 inbox=D:\Courses\Hackathons\AI GMAIL SPRINT SENTEC\data\inbox policy=D:\Courses\Hackathons\AI GMAIL SPRINT SENTEC\data\policy.md
+2026-10-14 11:04:38,856 INFO api_key_loaded source=env_or_dotenv len=53
+2026-10-14 11:04:38,857 INFO policy_loaded codes=22
+2026-10-14 11:04:38,858 INFO ids_filter=E005,E010,E013,E020
+2026-10-14 11:04:38,858 INFO inbox_scan files=4
+2026-10-14 11:04:38,858 INFO E005.json loaded id=E005 subject='URGENT: sparking wire in Block A corrido' body_len=248
+2026-10-14 11:04:41,818 INFO E005 llm_call=ok category=hostel escalate=True refs=['HOSTEL-3', 'ESC-1']
+2026-10-14 11:04:41,823 INFO E005 validator_fixes=confirmed ESC-1
+2026-10-14 11:04:41,828 INFO E005 final category=hostel priority=high escalate=True confidence=1.0
+2026-10-14 11:04:41,829 INFO E010.json loaded id=E010 subject='LMS account locked' body_len=156
+2026-10-14 11:04:45,509 INFO E010 llm_call=ok category=technical escalate=False refs=['TECH-1']
+2026-10-14 11:04:45,516 INFO E010 validator_fixes=none
+2026-10-14 11:04:45,538 INFO E010 final category=technical priority=medium escalate=False confidence=1.0
+2026-10-14 11:04:45,539 INFO E013.json loaded id=E013 subject='Late fee charged unfairly' body_len=227
+2026-10-14 11:04:52,675 INFO E013 llm_call=ok category=fee escalate=True refs=['ESC-4', 'FEE-2']
+2026-10-14 11:04:52,681 INFO E013 validator_fixes=confirmed ESC-4
+2026-10-14 11:04:52,687 INFO E013 final category=fee priority=high escalate=True confidence=0.95
+2026-10-14 11:04:52,687 INFO E020.json loaded id=E020 subject='THIRD email about re-evaluation' body_len=211
+2026-10-14 11:04:54,732 INFO E020 llm_call=ok category=academic escalate=True refs=['ACAD-4', 'ESC-5']
+2026-10-14 11:04:54,739 INFO E020 validator_fixes=confirmed ESC-5
+2026-10-14 11:04:54,747 INFO E020 final category=academic priority=high escalate=True confidence=1.0
+2026-10-14 11:04:54,754 INFO outbox_written path=D:\Courses\Hackathons\AI GMAIL SPRINT SENTEC\outbox_trace.json count=4

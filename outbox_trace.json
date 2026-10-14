@@ -1,0 +1,57 @@
+[
+  {
+    "email_id": "E005",
+    "category": "hostel",
+    "priority": "high",
+    "escalate": true,
+    "escalation_reason": "Electrical and water hazard in the corridor reported (HOSTEL-3, ESC-1).",
+    "policy_refs": [
+      "HOSTEL-3",
+      "ESC-1"
+    ],
+    "reply_draft": "Dear Danish Ali,\n\nThank you for reporting this safety hazard. Any electrical, fire, or structural hazard is an emergency (HOSTEL-3). Please stay away from the hazard immediately. We are escalating this right away to the Hostel Warden and Security (ESC-1).\n\nNext step: Stay away from the sparking wire and water leak while our teams handle the emergency escalation.\nStudent Helpdesk",
+    "confidence": 1.0,
+    "agent_notes": "Student reported a sparking wire and water dripping in Block A corridor, constituting a safety hazard under HOSTEL-3 and ESC-1. Validator: confirmed ESC-1"
+  },
+  {
+    "email_id": "E010",
+    "category": "technical",
+    "priority": "medium",
+    "escalate": false,
+    "escalation_reason": "",
+    "policy_refs": [
+      "TECH-1"
+    ],
+    "reply_draft": "Dear Rehan,\n\nPortal and LMS accounts lock after 5 failed login attempts and are reset through the IT Helpdesk with your roll number and student ID. This is processed within 24 hours under TECH-1.\n\nNext step: Contact the IT Helpdesk with your roll number and student ID to unlock your account.\nStudent Helpdesk",
+    "confidence": 1.0,
+    "agent_notes": "Student's LMS account is locked due to failed login attempts. Handled under TECH-1."
+  },
+  {
+    "email_id": "E013",
+    "category": "fee",
+    "priority": "high",
+    "escalate": true,
+    "escalation_reason": "Legal and media threats regarding fee charges require escalation to the Registrar's Office under ESC-4.; keyword trigger for ESC-4",
+    "policy_refs": [
+      "ESC-4",
+      "FEE-2"
+    ],
+    "reply_draft": "Dear Tariq Mehmood,\n\nWe acknowledge your concern regarding the late fee charged for student 24-AR-015. Please note that late fee waivers can only be approved by the Accounts Office on a written application with proof of the reason (FEE-2). Your message has been forwarded to the Registrar's Office.\n\nNext step: Submit a written application with proof to the Accounts Office for fee matters.\nStudent Helpdesk",
+    "confidence": 0.95,
+    "agent_notes": "Tariq Mehmood complained about a late fee and threatened legal/media action. Escalated under ESC-4 and referenced FEE-2. Validator: confirmed ESC-4"
+  },
+  {
+    "email_id": "E020",
+    "category": "academic",
+    "priority": "high",
+    "escalate": true,
+    "escalation_reason": "Re-evaluation request outcome is severely overdue (25 days vs 15 working days policy limit under ACAD-4), triggering ESC-5.; overdue wait evidenced by: I applied 25 days ago and nobody has replied.",
+    "policy_refs": [
+      "ACAD-4",
+      "ESC-5"
+    ],
+    "reply_draft": "Dear Talha Iqbal,\n\nWe apologize for the delay regarding your re-evaluation request. Under ACAD-4, the outcome for re-evaluation is processed within 15 working days through the Examination Department. Because your request has exceeded this timeframe, your complaint is now overdue and has been escalated under ESC-5 to the Examination Department for urgent review.\n\nNext step: The Examination Department will investigate the status of your application.\nStudent Helpdesk",
+    "confidence": 1.0,
+    "agent_notes": "Student Talha Iqbal is following up on a re-evaluation request made 25 days ago (overdue per ACAD-4 15-day limit), triggering ESC-5 escalation to the Examination Department. Validator: confirmed ESC-5"
+  }
+]

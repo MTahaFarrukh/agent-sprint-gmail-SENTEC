@@ -1,0 +1,41 @@
+{"email_id": "E005", "step": "PLAN", "detail": "triage -> lookup cited codes -> validate escalation -> validate/repair draft -> decide | subject='URGENT: sparking wire in Block A corridor'", "timestamp": "2026-10-14T06:04:38.858570+00:00"}
+{"email_id": "E005", "step": "ACTION triage", "detail": "LLM classify + draft", "timestamp": "2026-10-14T06:04:38.859410+00:00"}
+{"email_id": "E005", "step": "OBSERVATION", "detail": "category=hostel escalate=True cited=['HOSTEL-3', 'ESC-1']", "timestamp": "2026-10-14T06:04:41.816943+00:00"}
+{"email_id": "E005", "step": "ACTION lookup_policy", "detail": "HOSTEL-3", "timestamp": "2026-10-14T06:04:41.818375+00:00"}
+{"email_id": "E005", "step": "OBSERVATION", "detail": "HOSTEL-3: Any electrical, fire or structural hazard is an emergency. Escalate immediately ", "timestamp": "2026-10-14T06:04:41.819739+00:00"}
+{"email_id": "E005", "step": "ACTION lookup_policy", "detail": "ESC-1", "timestamp": "2026-10-14T06:04:41.820587+00:00"}
+{"email_id": "E005", "step": "OBSERVATION", "detail": "ESC-1: Safety hazards (fire, electrical, structural): escalate immediately to the Hoste", "timestamp": "2026-10-14T06:04:41.822025+00:00"}
+{"email_id": "E005", "step": "OBSERVATION", "detail": "validator confirmed ESC-1", "timestamp": "2026-10-14T06:04:41.823636+00:00"}
+{"email_id": "E005", "step": "ACTION validate_draft", "detail": "check reply (repairs=0)", "timestamp": "2026-10-14T06:04:41.825357+00:00"}
+{"email_id": "E005", "step": "OBSERVATION", "detail": "issues=[]", "timestamp": "2026-10-14T06:04:41.826966+00:00"}
+{"email_id": "E005", "step": "DECISION", "detail": "category=hostel priority=high escalate=True reason='Electrical and water hazard in the corridor reported (HOSTEL-3, ESC-1).'", "timestamp": "2026-10-14T06:04:41.827830+00:00"}
+{"email_id": "E010", "step": "PLAN", "detail": "triage -> lookup cited codes -> validate escalation -> validate/repair draft -> decide | subject='LMS account locked'", "timestamp": "2026-10-14T06:04:41.829334+00:00"}
+{"email_id": "E010", "step": "ACTION triage", "detail": "LLM classify + draft", "timestamp": "2026-10-14T06:04:41.831999+00:00"}
+{"email_id": "E010", "step": "OBSERVATION", "detail": "category=technical escalate=False cited=['TECH-1']", "timestamp": "2026-10-14T06:04:45.507259+00:00"}
+{"email_id": "E010", "step": "ACTION lookup_policy", "detail": "TECH-1", "timestamp": "2026-10-14T06:04:45.509978+00:00"}
+{"email_id": "E010", "step": "OBSERVATION", "detail": "TECH-1: Portal/LMS accounts lock after 5 failed login attempts. Reset through the IT Hel", "timestamp": "2026-10-14T06:04:45.513143+00:00"}
+{"email_id": "E010", "step": "ACTION validate_draft", "detail": "check reply (repairs=0)", "timestamp": "2026-10-14T06:04:45.516167+00:00"}
+{"email_id": "E010", "step": "OBSERVATION", "detail": "issues=[]", "timestamp": "2026-10-14T06:04:45.529430+00:00"}
+{"email_id": "E010", "step": "DECISION", "detail": "category=technical priority=medium escalate=False reason=''", "timestamp": "2026-10-14T06:04:45.532028+00:00"}
+{"email_id": "E013", "step": "PLAN", "detail": "triage -> lookup cited codes -> validate escalation -> validate/repair draft -> decide | subject='Late fee charged unfairly'", "timestamp": "2026-10-14T06:04:45.539455+00:00"}
+{"email_id": "E013", "step": "ACTION triage", "detail": "LLM classify + draft", "timestamp": "2026-10-14T06:04:45.542504+00:00"}
+{"email_id": "E013", "step": "OBSERVATION", "detail": "category=fee escalate=True cited=['ESC-4', 'FEE-2']", "timestamp": "2026-10-14T06:04:52.673068+00:00"}
+{"email_id": "E013", "step": "ACTION lookup_policy", "detail": "ESC-4", "timestamp": "2026-10-14T06:04:52.675988+00:00"}
+{"email_id": "E013", "step": "OBSERVATION", "detail": "ESC-4: Legal or media threats: escalate to the Registrar's Office. Do not argue or admi", "timestamp": "2026-10-14T06:04:52.676881+00:00"}
+{"email_id": "E013", "step": "ACTION lookup_policy", "detail": "FEE-2", "timestamp": "2026-10-14T06:04:52.677702+00:00"}
+{"email_id": "E013", "step": "OBSERVATION", "detail": "FEE-2: Fees paid after the due date carry a late fee of Rs. 500 per week. Late fee waiv", "timestamp": "2026-10-14T06:04:52.680006+00:00"}
+{"email_id": "E013", "step": "OBSERVATION", "detail": "validator confirmed ESC-4", "timestamp": "2026-10-14T06:04:52.681652+00:00"}
+{"email_id": "E013", "step": "ACTION validate_draft", "detail": "check reply (repairs=0)", "timestamp": "2026-10-14T06:04:52.683360+00:00"}
+{"email_id": "E013", "step": "OBSERVATION", "detail": "issues=[]", "timestamp": "2026-10-14T06:04:52.684968+00:00"}
+{"email_id": "E013", "step": "DECISION", "detail": "category=fee priority=high escalate=True reason='Legal and media threats regarding fee charges require escalation to the Registra'", "timestamp": "2026-10-14T06:04:52.686033+00:00"}
+{"email_id": "E020", "step": "PLAN", "detail": "triage -> lookup cited codes -> validate escalation -> validate/repair draft -> decide | subject='THIRD email about re-evaluation'", "timestamp": "2026-10-14T06:04:52.687710+00:00"}
+{"email_id": "E020", "step": "ACTION triage", "detail": "LLM classify + draft", "timestamp": "2026-10-14T06:04:52.688930+00:00"}
+{"email_id": "E020", "step": "OBSERVATION", "detail": "category=academic escalate=True cited=['ACAD-4', 'ESC-5']", "timestamp": "2026-10-14T06:04:54.730455+00:00"}
+{"email_id": "E020", "step": "ACTION lookup_policy", "detail": "ACAD-4", "timestamp": "2026-10-14T06:04:54.733062+00:00"}
+{"email_id": "E020", "step": "OBSERVATION", "detail": "ACAD-4: Re-evaluation: apply within 7 days of result announcement, with a fee of Rs. 100", "timestamp": "2026-10-14T06:04:54.734528+00:00"}
+{"email_id": "E020", "step": "ACTION lookup_policy", "detail": "ESC-5", "timestamp": "2026-10-14T06:04:54.735293+00:00"}
+{"email_id": "E020", "step": "OBSERVATION", "detail": "ESC-5: Overdue complaints (past the stated response time) or outages affecting many use", "timestamp": "2026-10-14T06:04:54.736675+00:00"}
+{"email_id": "E020", "step": "OBSERVATION", "detail": "validator confirmed ESC-5", "timestamp": "2026-10-14T06:04:54.739743+00:00"}
+{"email_id": "E020", "step": "ACTION validate_draft", "detail": "check reply (repairs=0)", "timestamp": "2026-10-14T06:04:54.741730+00:00"}
+{"email_id": "E020", "step": "OBSERVATION", "detail": "issues=[]", "timestamp": "2026-10-14T06:04:54.743216+00:00"}
+{"email_id": "E020", "step": "DECISION", "detail": "category=academic priority=high escalate=True reason='Re-evaluation request outcome is severely overdue (25 days vs 15 working days po'", "timestamp": "2026-10-14T06:04:54.744973+00:00"}

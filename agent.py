@@ -3,6 +3,7 @@
 Usage:
     python agent.py
     python agent.py --inbox data/inbox --policy data/policy.md --out outbox.json --limit 5
+    python agent.py --ids E005,E010,E013,E020 --out outbox_trace.json
 """
 
 from __future__ import annotations
@@ -13,13 +14,19 @@ import logging
 import os
 import sys
 import tempfile
+import time
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 ROOT = Path(__file__).resolve().parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+
+TRACE_PATH = ROOT / "logs" / "trace.jsonl"
+MAX_REPAIRS = 2
+MAX_RETRIES = 2
+RETRY_BACKOFF_SECONDS = (2.0, 4.0)
 
 
 def _load_gemini_api_key() -> str:
@@ -49,17 +56,40 @@ def _load_gemini_api_key() -> str:
 # Must run before importing llm / src.config so the key is visible.
 GEMINI_API_KEY = _load_gemini_api_key()
 
-from llm import triage_email  # noqa: E402
+from llm import repair_draft, triage_email  # noqa: E402
 from policy import load_policy  # noqa: E402
-from validator import validate_result  # noqa: E402
+from validator import inspect_draft, lookup_policy, validate_result  # noqa: E402
 
 HOLDING_REPLY = (
     "Dear Student,\n\n"
     "Thank you for writing to us. We received your message and a team member "
     "will review it shortly. If this is urgent, please contact the relevant "
-    "campus office directly.\n\n"
+    "university office directly.\n\n"
     "Student Helpdesk"
 )
+
+
+class TraceLogger:
+    """One short console line per step + one JSON object per line in trace.jsonl."""
+
+    def __init__(self, path: Path) -> None:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        self.path = path
+        # Overwrite at start of each run.
+        self.path.write_text("", encoding="utf-8")
+
+    def step(self, email_id: str, step: str, detail: str) -> None:
+        ts = datetime.now(timezone.utc).isoformat()
+        record = {
+            "email_id": email_id,
+            "step": step,
+            "detail": detail,
+            "timestamp": ts,
+        }
+        with self.path.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps(record, ensure_ascii=False) + "\n")
+        # Short readable console line for live demo.
+        print(f"[{email_id}] {step}: {detail}", flush=True)
 
 
 def _setup_logging(log_path: Path) -> logging.Logger:
@@ -71,10 +101,8 @@ def _setup_logging(log_path: Path) -> logging.Logger:
     fmt = logging.Formatter("%(asctime)s %(levelname)s %(message)s")
     fh = logging.FileHandler(log_path, encoding="utf-8")
     fh.setFormatter(fmt)
-    sh = logging.StreamHandler(sys.stdout)
-    sh.setFormatter(fmt)
+    # File only — live steps go through TraceLogger console lines.
     logger.addHandler(fh)
-    logger.addHandler(sh)
     return logger
 
 
@@ -158,34 +186,172 @@ def _atomic_write_json(path: Path, payload: list[dict[str, Any]]) -> None:
     Path(tmp_name).replace(path)
 
 
+def _with_retry(
+    email_id: str,
+    action_name: str,
+    fn: Callable[[], Any],
+    trace: TraceLogger,
+) -> Any:
+    """Retry with backoff; log each retry; raise on final failure."""
+    last_exc: Exception | None = None
+    for attempt in range(MAX_RETRIES + 1):
+        try:
+            return fn()
+        except Exception as exc:  # noqa: BLE001
+            last_exc = exc
+            if attempt >= MAX_RETRIES:
+                break
+            delay = RETRY_BACKOFF_SECONDS[min(attempt, len(RETRY_BACKOFF_SECONDS) - 1)]
+            trace.step(
+                email_id,
+                "ACTION retry",
+                f"{action_name} failed ({type(exc).__name__}: {exc}); "
+                f"backoff {delay:.0f}s attempt {attempt + 1}/{MAX_RETRIES}",
+            )
+            time.sleep(delay)
+    assert last_exc is not None
+    raise last_exc
+
+
 def process_email(
     email: dict[str, Any],
     policy_text: str,
     policy_codes: dict[str, str],
     logger: logging.Logger,
+    trace: TraceLogger,
 ) -> dict[str, Any]:
-    """Triage one email end-to-end with per-email failure handling."""
+    """Explicit agent loop: PLAN → ACTION/OBSERVATION → DECISION."""
     email_id = str(email.get("id") or "UNKNOWN")
+    subject = str(email.get("subject") or "")[:50]
+
     if email.get("_load_error"):
+        trace.step(email_id, "PLAN", f"load failed; emit safe record ({email['_load_error']})")
+        trace.step(email_id, "DECISION", "safe failure escalate=true")
         logger.info("%s final=safe_failure reason=%s", email_id, email["_load_error"])
         return _safe_failure(email_id, str(email["_load_error"]))
 
     try:
-        logger.info("%s llm_call=start", email_id)
-        raw = triage_email(email, policy_text, policy_codes)
+        # --- PLAN ---
+        trace.step(
+            email_id,
+            "PLAN",
+            f"triage -> lookup cited codes -> validate escalation -> "
+            f"validate/repair draft -> decide | subject={subject!r}",
+        )
+
+        # --- ACTION triage ---
+        trace.step(email_id, "ACTION triage", "LLM classify + draft")
+        raw = _with_retry(
+            email_id,
+            "triage",
+            lambda: triage_email(email, policy_text, policy_codes),
+            trace,
+        )
+        cited = [
+            str(r).strip().upper()
+            for r in (raw.get("policy_refs") or [])
+            if str(r).strip()
+        ]
+        trace.step(
+            email_id,
+            "OBSERVATION",
+            f"category={raw.get('category')} escalate={raw.get('escalate')} "
+            f"cited={cited}",
+        )
         logger.info(
             "%s llm_call=ok category=%s escalate=%s refs=%s",
             email_id,
             raw.get("category"),
             raw.get("escalate"),
-            raw.get("policy_refs"),
+            cited,
         )
 
+        # --- ACTION lookup_policy for each cited code ---
+        kept_refs: list[str] = []
+        for code in cited:
+            trace.step(email_id, "ACTION lookup_policy", code)
+            rule = lookup_policy(code, policy_codes)
+            if rule is None:
+                trace.step(
+                    email_id,
+                    "OBSERVATION",
+                    f"{code} unknown — dropped",
+                )
+                continue
+            snippet = rule[:80].replace("\n", " ")
+            kept_refs.append(code)
+            trace.step(email_id, "OBSERVATION", f"{code}: {snippet}")
+        raw["policy_refs"] = kept_refs
+
+        # Escalation / schema validator (honesty tags).
         result, fixes = validate_result(raw, email, policy_codes, policy_text)
         if fixes:
             logger.info("%s validator_fixes=%s", email_id, "; ".join(fixes))
+            honesty = [
+                f
+                for f in fixes
+                if f.startswith("confirmed ") or f.startswith("overrode:")
+            ]
+            if honesty:
+                trace.step(
+                    email_id,
+                    "OBSERVATION",
+                    "validator " + "; ".join(honesty[:4]),
+                )
         else:
             logger.info("%s validator_fixes=none", email_id)
+
+        # --- ACTION validate_draft + repair loop ---
+        repairs = 0
+        while True:
+            draft = str(result.get("reply_draft") or "")
+            refs_now = list(result.get("policy_refs") or [])
+            trace.step(email_id, "ACTION validate_draft", f"check reply (repairs={repairs})")
+            issues = inspect_draft(draft, policy_refs=refs_now)
+            if not issues:
+                trace.step(email_id, "OBSERVATION", "issues=[]")
+                break
+            trace.step(email_id, "OBSERVATION", f"issues={issues}")
+            if repairs >= MAX_REPAIRS:
+                trace.step(
+                    email_id,
+                    "OBSERVATION",
+                    f"max repairs ({MAX_REPAIRS}) reached; keeping draft",
+                )
+                break
+
+            repairs += 1
+            issue_list = list(issues)
+
+            def _do_repair(
+                _draft: str = draft,
+                _refs: list[str] = refs_now,
+                _issues: list[str] = issue_list,
+            ) -> str:
+                return repair_draft(
+                    email, policy_text, _draft, _refs, _issues
+                )
+
+            trace.step(
+                email_id,
+                "ACTION repair_draft",
+                f"LLM repair #{repairs} for {len(issue_list)} issue(s)",
+            )
+            try:
+                new_draft = _with_retry(
+                    email_id,
+                    "repair_draft",
+                    _do_repair,
+                    trace,
+                )
+                result["reply_draft"] = new_draft
+            except Exception as exc:  # noqa: BLE001
+                trace.step(
+                    email_id,
+                    "OBSERVATION",
+                    f"repair failed ({type(exc).__name__}); stop repair loop",
+                )
+                break
 
         notes = str(result.get("agent_notes") or "").strip()
         if not notes:
@@ -193,10 +359,16 @@ def process_email(
                 f"Classified as {result.get('category')} with refs "
                 f"{result.get('policy_refs')}."
             )
-        # Keep agent_notes to ~2 lines
         note_lines = [ln.strip() for ln in result["agent_notes"].splitlines() if ln.strip()]
         result["agent_notes"] = " ".join(note_lines[:2])
 
+        reason = str(result.get("escalation_reason") or "")[:80]
+        trace.step(
+            email_id,
+            "DECISION",
+            f"category={result.get('category')} priority={result.get('priority')} "
+            f"escalate={result.get('escalate')} reason={reason!r}",
+        )
         logger.info(
             "%s final category=%s priority=%s escalate=%s confidence=%s",
             email_id,
@@ -217,6 +389,12 @@ def process_email(
             "agent_notes": str(result.get("agent_notes") or ""),
         }
     except Exception as exc:  # noqa: BLE001 — never crash the loop
+        trace.step(
+            email_id,
+            "ACTION retry",
+            f"pipeline failed after retries ({type(exc).__name__}: {exc})",
+        )
+        trace.step(email_id, "DECISION", "safe failure escalate=true")
         logger.info("%s final=safe_failure error=%s: %s", email_id, type(exc).__name__, exc)
         return _safe_failure(email_id, f"{type(exc).__name__}: {exc}")
 
@@ -289,8 +467,10 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     logger = _setup_logging(args.log.resolve())
+    trace = TraceLogger(TRACE_PATH)
     started = datetime.now(timezone.utc).isoformat()
     logger.info("run_start at=%s inbox=%s policy=%s", started, args.inbox, args.policy)
+    print(f"trace -> {TRACE_PATH}", flush=True)
 
     if not GEMINI_API_KEY:
         msg = (
@@ -329,14 +509,18 @@ def main(argv: list[str] | None = None) -> int:
         files = files[: args.limit]
     logger.info("inbox_scan files=%d", len(files))
 
-
     results: list[dict[str, Any]] = []
     for path in files:
         email = _load_email_file(path, logger)
         if email is None:
-            results.append(_safe_failure(path.stem, "could not read file"))
+            eid = path.stem
+            trace.step(eid, "PLAN", "could not read file; emit safe record")
+            trace.step(eid, "DECISION", "safe failure escalate=true")
+            results.append(_safe_failure(eid, "could not read file"))
             continue
-        results.append(process_email(email, policy_text, policy_codes, logger))
+        results.append(
+            process_email(email, policy_text, policy_codes, logger, trace)
+        )
 
     out_path = Path(args.out).resolve()
     _atomic_write_json(out_path, results)
