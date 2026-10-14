@@ -5,16 +5,6 @@ Muhammad Taha Farrukh, Muhammad Uzzam Siddiqui, Muhammad Bilal Rasheed
 
 Agent Sprint, The Engineer's Code 2026 (SENTEC, NED University)
 
-**Live dashboard:** [https://agent-sprint-teenhaseen.streamlit.app/](https://agent-sprint-teenhaseen.streamlit.app/)
-
-On Streamlit Cloud, set the API key under **App settings → Secrets** (the app does not prompt for it):
-
-```toml
-GEMINI_API_KEY = "your_key"
-```
-
-Then reboot the app. Without this, “Run agent” exits with code 1.
-
 ## What it does
 
 Reads every email in `data/inbox/`, understands it, looks up the matching rules in `data/policy.md`, decides category / priority / whether a human must handle it, drafts a policy-grounded reply, and saves everything to `outbox.json`.
@@ -63,10 +53,6 @@ python agent.py --demo-failures --limit 5 --out outbox_demo.json
 `--demo-failures` is **off by default**. When on, it injects simulated timeouts, invalid JSON, and bad drafts (clearly labelled `DEMO: simulated failure`) so retry / repair paths can be shown live. At the end it prints a recovery summary (also written to `logs/trace.jsonl`).
 
 ### Dashboard
-
-Live (hosted): [https://agent-sprint-teenhaseen.streamlit.app/](https://agent-sprint-teenhaseen.streamlit.app/)
-
-Or run locally:
 
 ```bash
 streamlit run dashboard.py
