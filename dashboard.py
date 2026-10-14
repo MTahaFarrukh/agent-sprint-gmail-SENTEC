@@ -77,32 +77,51 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {{
   color: var(--text);
   font-family: {FONT};
 }}
-.stApp p, .stApp label, .stApp span, .stApp li {{ color: var(--text); }}
+/* Do NOT force every span to dark text — that kills hero pills / badges. */
+.stApp, .stApp p, .stApp li {{ color: var(--text); }}
 header[data-testid="stHeader"] {{ background: transparent !important; }}
 #MainMenu, footer, .stDeployButton, [data-testid="stDecoration"] {{ display: none !important; }}
 .block-container {{ padding-top: 1.2rem; padding-bottom: 3rem; max-width: 1380px; }}
+
+/* Main-area widget labels (light background) */
+[data-testid="stAppViewContainer"] label,
+[data-testid="stAppViewContainer"] .stMarkdown p {{
+  color: #334155 !important;
+}}
 
 [data-testid="stSidebar"] {{
   background: linear-gradient(180deg, {INK} 0%, {INK_SOFT} 100%) !important;
   border-right: 1px solid rgba(255,255,255,0.06);
 }}
-[data-testid="stSidebar"] * {{ color: #E8F1F4 !important; }}
-[data-testid="stSidebar"] .muted {{ color: #9BB0BC !important; }}
+[data-testid="stSidebar"] .side-title,
+[data-testid="stSidebar"] .side-hint,
+[data-testid="stSidebar"] label,
+[data-testid="stSidebar"] p,
+[data-testid="stSidebar"] span {{
+  color: #E8F1F4 !important;
+}}
+[data-testid="stSidebar"] .side-hint,
+[data-testid="stSidebar"] .muted {{ color: #A8C0CC !important; }}
 [data-testid="stSidebar"] [data-baseweb="select"] > div,
 [data-testid="stSidebar"] [data-baseweb="input"],
 [data-testid="stSidebar"] [data-baseweb="base-input"],
 [data-testid="stSidebar"] [data-baseweb="textarea"],
 [data-testid="stSidebar"] .stTextInput input,
 [data-testid="stSidebar"] .stTextArea textarea {{
-  background: rgba(255,255,255,0.06) !important;
-  color: #E8F1F4 !important;
-  border-color: rgba(255,255,255,0.12) !important;
+  background: rgba(255,255,255,0.12) !important;
+  color: #F4FAFB !important;
+  border: 1px solid rgba(125,211,199,0.35) !important;
+  border-radius: 12px !important;
+}}
+[data-testid="stSidebar"] input::placeholder,
+[data-testid="stSidebar"] textarea::placeholder {{
+  color: #9BB0BC !important; opacity: 1 !important;
 }}
 
 [data-baseweb="select"] > div, [data-baseweb="input"], [data-baseweb="base-input"],
 [data-baseweb="textarea"], .stTextInput input, .stTextArea textarea {{
-  background: #fff !important; color: var(--text) !important;
-  border-color: #C5D5DC !important; border-radius: 12px !important;
+  background: #fff !important; color: #0F172A !important;
+  border-color: #B7CBD4 !important; border-radius: 12px !important;
 }}
 [data-baseweb="select"] > div:focus-within, [data-baseweb="input"]:focus-within,
 [data-baseweb="textarea"]:focus-within {{ border-color: var(--sea) !important; box-shadow: 0 0 0 3px var(--sea-soft); }}
@@ -163,29 +182,42 @@ div[data-testid="stTabs"] button[aria-selected="true"] {{
 .brand-meta {{
   margin-top: 1rem; display:flex; flex-wrap:wrap; gap: .5rem;
 }}
+.brand-hero .pill,
 .pill {{
-  display:inline-flex; align-items:center; gap:.4rem; padding:.35rem .7rem;
-  border-radius:999px; font-size:.72rem; font-weight:700; letter-spacing:.04em;
-  border:1px solid rgba(255,255,255,0.14); background: rgba(255,255,255,0.06); color:#E8F1F4;
+  display:inline-flex !important; align-items:center; gap:.4rem; padding:.4rem .8rem;
+  border-radius:999px; font-size:.72rem; font-weight:700; letter-spacing:.05em;
+  border:1px solid rgba(125,211,199,0.45) !important;
+  background: rgba(15,118,110,0.28) !important;
+  color: #F4FAFB !important;
 }}
-.pill .dot {{ width:7px; height:7px; border-radius:50%; background:#34D399; box-shadow:0 0 10px #34D399; }}
+.brand-hero .pill,
+.brand-hero .pill * {{
+  color: #F4FAFB !important;
+}}
+.pill .dot {{
+  width:7px; height:7px; border-radius:50%; flex-shrink:0;
+  background:#34D399 !important; box-shadow:0 0 10px #34D399;
+}}
 .brand-side {{
   border-radius: 24px; padding: 1.25rem 1.35rem;
-  background: rgba(255,255,255,0.72); border: 1px solid #C9DCE3;
+  background: rgba(255,255,255,0.88); border: 1px solid #C9DCE3;
   backdrop-filter: blur(8px);
 }}
 .brand-side h3 {{
   font-family: {DISPLAY}; font-size: 1rem; margin: 0 0 .55rem; letter-spacing: -0.02em;
+  color: #0B1F2A !important;
 }}
-.brand-side p {{ margin: 0; color: var(--muted); font-size: .86rem; line-height: 1.5; }}
+.brand-side p {{ margin: 0; color: #5B6B76 !important; font-size: .86rem; line-height: 1.5; }}
 .brand-side .steps {{
-  margin-top: .85rem; display:grid; gap: .4rem;
+  margin-top: .85rem; display:grid; gap: .45rem;
 }}
 .brand-side .step {{
-  display:flex; gap:.55rem; align-items:flex-start; font-size:.82rem; color: var(--text);
+  display:flex; gap:.55rem; align-items:flex-start; font-size:.82rem;
+  color: #334155 !important;
 }}
+.brand-side .step span {{ color: #334155 !important; }}
 .brand-side .step b {{
-  font-size:.68rem; letter-spacing:.08em; color: var(--sea); min-width: 4.6rem;
+  font-size:.68rem; letter-spacing:.08em; color: #0F766E !important; min-width: 4.6rem;
 }}
 
 .kpi {{
@@ -224,49 +256,66 @@ div[data-testid="stTabs"] button[aria-selected="true"] {{
 
 .bdg {{
   display:inline-block; padding:.16rem .5rem; border-radius:999px; font-size:.72rem; font-weight:600;
-  background: #F0F6F8; border:1px solid #C9DCE3; color: var(--text); margin: 0 .22rem .18rem 0; white-space:nowrap;
+  background: #EAF4F6; border:1px solid #C9DCE3; color: #0B1F2A !important;
+  margin: 0 .22rem .18rem 0; white-space:nowrap;
 }}
-.bdg.accent {{ background: var(--sea-soft); border-color: transparent; color: var(--sea); }}
-.bdg.danger {{ background: var(--coral-soft); border-color: transparent; color: var(--coral); }}
-.bdg.code {{ font-family: ui-monospace, 'Cascadia Code', Consolas, monospace; }}
+.bdg.accent {{ background: var(--sea-soft); border-color: transparent; color: #0F766E !important; }}
+.bdg.danger {{ background: var(--coral-soft); border-color: transparent; color: #BE123C !important; }}
+.bdg.code {{ font-family: ui-monospace, 'Cascadia Code', Consolas, monospace; color: #0B1F2A !important; }}
 
 .esc {{
   background: #fff; border:1px solid #C9DCE3; border-left: 4px solid var(--coral);
   border-radius: 14px; padding: .75rem 1rem; margin-bottom:.55rem;
 }}
 .esc .top {{ display:flex; justify-content:space-between; gap:.6rem; flex-wrap:wrap; align-items:center; }}
-.esc .id {{ font-weight:700; color: var(--coral); margin-right:.45rem; }}
-.esc .subj {{ font-weight:600; }}
-.esc .reason {{ color: var(--muted); font-size:.86rem; margin-top:.3rem; }}
+.esc .id {{ font-weight:700; color: #BE123C !important; margin-right:.45rem; }}
+.esc .subj {{ font-weight:600; color: #0B1F2A !important; }}
+.esc .muted {{ color: #5B6B76 !important; }}
+.esc .reason {{ color: #5B6B76 !important; font-size:.86rem; margin-top:.3rem; }}
 
 .tbl-wrap {{
   max-height: 460px; overflow:auto; border:1px solid #C9DCE3; border-radius:16px;
-  background: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.95);
 }}
 table.tbl {{ width:100%; border-collapse: collapse; font-size:.86rem; }}
 table.tbl th {{
-  position: sticky; top:0; background: #EFF6F8; color: var(--muted); text-align:left;
+  position: sticky; top:0; background: #EFF6F8; color: #5B6B76 !important; text-align:left;
   font-weight:700; font-size:.68rem; text-transform:uppercase; letter-spacing:.08em;
   padding:.7rem .8rem; z-index:1;
 }}
-table.tbl td {{ padding:.55rem .8rem; border-top:1px solid #D7E5EA; vertical-align: top; }}
+table.tbl td {{
+  padding:.65rem .8rem; border-top:1px solid #D7E5EA; vertical-align: top;
+  color: #0B1F2A !important;
+}}
+table.tbl td b {{ color: #0B1F2A !important; font-family: {DISPLAY}; }}
+table.tbl .muted {{ color: #5B6B76 !important; font-size: .78rem; }}
 table.tbl tr:hover td {{ background: rgba(15,118,110,0.05); }}
-.conf {{ display:flex; align-items:center; gap:.45rem; }}
+.conf {{ display:flex; align-items:center; gap:.45rem; color: #334155 !important; }}
 .conf .track {{ width:58px; height:6px; background: #D7E5EA; border-radius:6px; overflow:hidden; }}
 .conf .fill {{ height:100%; background: var(--sea); border-radius:6px; }}
 .conf.low .fill {{ background: var(--coral); }}
 
+.card {{ color: #0B1F2A; }}
+.card h4 {{ color: #5B6B76 !important; }}
+.card .muted {{ color: #5B6B76 !important; }}
+.card .bdg.accent {{ color: #0F766E !important; }}
+.card .bdg.danger {{ color: #BE123C !important; }}
+.card .bdg:not(.accent):not(.danger) {{ color: #0B1F2A !important; }}
+.brand-hero h1, .brand-hero .brand-name {{ color: #F4FAFB !important; }}
+.brand-hero .brand-kicker {{ color: #7DD3C7 !important; }}
+.brand-hero .brand-tag {{ color: #B7CBD4 !important; }}
+
 .reply {{
-  white-space: pre-wrap; line-height:1.6; font-size:.92rem;
+  white-space: pre-wrap; line-height:1.65; font-size:.92rem; color: #1E293B !important;
   background: #F4FAFB; border-radius: 14px; padding: 1rem 1.05rem; border:1px solid #C9DCE3;
 }}
-.body {{ white-space: pre-wrap; line-height:1.55; font-size:.88rem; color: #334155; }}
+.body {{ white-space: pre-wrap; line-height:1.55; font-size:.88rem; color: #334155 !important; }}
 .rule {{
   padding:.55rem .7rem; border-radius:12px; background: #F4FAFB; margin-bottom:.4rem;
-  font-size:.86rem; line-height:1.5; border:1px solid #D7E5EA;
+  font-size:.86rem; line-height:1.5; border:1px solid #D7E5EA; color: #334155 !important;
 }}
-.rule .c {{ font-weight:700; color: var(--sea); margin-right:.35rem; font-family: ui-monospace, Consolas, monospace; }}
-.rule.esc-rule .c {{ color: var(--coral); }}
+.rule .c {{ font-weight:700; color: #0F766E !important; margin-right:.35rem; font-family: ui-monospace, Consolas, monospace; }}
+.rule.esc-rule .c {{ color: #BE123C !important; }}
 
 .tl {{ position:relative; padding-left: 1.35rem; }}
 .tl::before {{ content:""; position:absolute; left:.42rem; top:.3rem; bottom:.3rem; width:2px; background: #C9DCE3; }}
@@ -276,9 +325,9 @@ table.tbl tr:hover td {{ background: rgba(15,118,110,0.05); }}
   background: #fff; border:2px solid var(--sea);
 }}
 .tl .st.DECISION::before {{ background: var(--sea); }}
-.tl .kind {{ font-size:.66rem; font-weight:700; letter-spacing:.1em; color: var(--sea); }}
-.tl .ts {{ color: var(--muted); font-size:.7rem; margin-left:.35rem; }}
-.tl .txt {{ font-size:.85rem; margin-top:.08rem; word-break: break-word; }}
+.tl .kind {{ font-size:.66rem; font-weight:700; letter-spacing:.1em; color: #0F766E !important; }}
+.tl .ts {{ color: #64748B !important; font-size:.7rem; margin-left:.35rem; }}
+.tl .txt {{ font-size:.85rem; margin-top:.08rem; word-break: break-word; color: #334155 !important; }}
 
 .logtail {{
   background:#0B1F2A; border:1px solid #1F3A4A; border-radius:14px; padding:.85rem 1rem;
